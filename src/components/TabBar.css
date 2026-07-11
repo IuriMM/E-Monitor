@@ -1,0 +1,21 @@
+.tab-bar{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 20px;
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+img{
+    cursor: pointer;
+}
+
+.ativo{
+    filter: brightness(0) saturate(100%) invert(50%) sepia(87%) saturate(1476%) hue-rotate(193deg) brightness(101%) contrast(96%);
+}

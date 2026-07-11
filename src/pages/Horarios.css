@@ -1,0 +1,14 @@
+.barra-dias{
+    display: flex; 
+    justify-content: space-between;
+    align-items: center;
+    margin: 20px 20px;
+    cursor: pointer;
+    p{
+        font-size: 3.5vw;
+    }
+}
+
+.active{
+    color: #2096F7;
+}
