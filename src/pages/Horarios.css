@@ -12,3 +12,12 @@
 .active{
     color: #2096F7;
 }
+
+.sem-aula {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 70vh; /* Para centralizar verticalmente na sessão */
+    color: #888;
+    font-size: 1.2rem;
+}
