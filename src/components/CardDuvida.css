@@ -1,0 +1,35 @@
+.card-duvida {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 20px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.duvida-info{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    h2{
+        font-size: 22px;
+        font-weight: 600;
+    }
+    p{
+        font-size: 16px;
+        font-weight: 400;
+    }
+}
+
+.duvida-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.duvida-content {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}

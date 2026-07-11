@@ -1,0 +1,55 @@
+{
+  "Materias": {
+    "MAT032": {
+      "nome": "Calculo A",
+      "monitores": ["José", "Maria"],
+      "cronograma": [
+        {"dia_semana": "SEG", "horario": "14:00 - 16:00", "sala": "Sala 1"}, 
+        {"dia_semana": "QUA", "horario": "14:00 - 16:00", "sala": "Sala 1"}
+      ],
+      "provas": [
+        { "nome": "Prova 1", "dia": "2025-05-24", "horario": "14:00 - 16:00" },
+        { "nome": "Prova 2", "dia": "2025-07-24", "horario": "14:00 - 16:00" },
+        { "nome": "Prova Final", "dia": "2025-07-24", "horario": "14:00 - 16:00" },
+        { "nome": "Recuperação", "dia": "2025-07-24", "horario": "14:00 - 16:00" }
+      ]
+    },
+    "COMP902": {
+      "nome": "Programação Orientada a Objetos",
+      "monitores": ["Lorenzo", "Julia"],
+      "cronograma": [
+        {"dia_semana": "TER", "horario": "18:00 - 20:00", "sala": "Sala 1"}, 
+        {"dia_semana": "SEX", "horario": "18:00 - 20:00", "sala": "Sala 1"}
+      ],
+      "provas": [
+        { "nome": "Prova 1", "dia": "2025-05-24", "horario": "14:00 - 16:00" },
+        { "nome": "Prova 2", "dia": "2025-07-24", "horario": "14:00 - 16:00" },
+        { "nome": "Prova Final", "dia": "2025-07-24", "horario": "14:00 - 16:00" },
+        { "nome": "Recuperação", "dia": "2025-07-24", "horario": "14:00 - 16:00" }
+      ]
+    }
+  },
+  "Usuarios": {
+    "nome": "João",
+    "sobrenome": "Miguel da Silva",
+    "fotoPerfil": false,
+    "curso": "Ciencia da Computação",
+    "matricula": "2024210211",
+    "materias": [
+      "Calculo A",
+      "Programação Orientada a Objetos"
+    ],
+    "duvidas": [
+      {
+        "materia": "Calculo A",
+        "horario": "15:32",
+        "duvida": "Não entendi como funciona a regra de derivada da função composta"
+      },
+      {
+        "materia": "Programação Orientada a Objetos",
+        "horario": "18:00 - 20:00",
+        "duvida": "Qual a difereca entre classes e objetos?"
+      }
+    ]
+  }
+}
