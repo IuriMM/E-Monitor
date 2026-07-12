@@ -2,7 +2,7 @@ import { useState } from 'react';
 import ChatWindow from '../components/ChatWindow';
 import './Chat.css';
 
-export default function Chat({ Materias, Mensagens, Usuario }) {
+export default function Chat({ Materias, Mensagens, Usuario, apiUrl, onNewData }) {
     const [filtroMateria, setFiltroMateria] = useState('todas');
     const [selectedMonitor, setSelectedMonitor] = useState(null);
 
@@ -27,16 +27,20 @@ export default function Chat({ Materias, Mensagens, Usuario }) {
         <div className="page chat-page">
             {!selectedMonitor ? (
                 <>
-                    <select 
-                        className="select-filtro" 
-                        value={filtroMateria}
-                        onChange={(e) => setFiltroMateria(e.target.value)}
-                    >
-                        <option value="todas">Filtrar por matéria</option>
-                        {Object.values(Materias).map((materia, index) => (
-                            <option key={index} value={materia.nome}>{materia.nome}</option>
-                        ))}
-                    </select>
+                    <div className="filtros-container">
+                        <select 
+                            className="select-filtro" 
+                            value={filtroMateria}
+                            onChange={(e) => setFiltroMateria(e.target.value)}
+                        >
+                            <option value="todas">Filtrar por matéria</option>
+                            {Object.values(Materias).map((materia, index) => {
+                                const text = materia.nome;
+                                const shortText = text.length > 40 ? text.substring(0, 37) + '...' : text;
+                                return <option key={index} value={materia.nome} title={text}>{shortText}</option>;
+                            })}
+                        </select>
+                    </div>
 
                     <div className="chat-contact-list">
                         {monitoresFiltrados.map((monitor, index) => (
@@ -62,6 +66,8 @@ export default function Chat({ Materias, Mensagens, Usuario }) {
                     mensagensIniciais={Mensagens[selectedMonitor.nome] || []}
                     usuarioAtual={Usuario}
                     onBack={() => setSelectedMonitor(null)}
+                    apiUrl={apiUrl}
+                    onNewData={onNewData}
                 />
             )}
         </div>

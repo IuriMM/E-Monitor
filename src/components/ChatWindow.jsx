@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './ChatWindow.css';
 
-export default function ChatWindow({ monitor, mensagensIniciais, usuarioAtual, onBack }) {
+export default function ChatWindow({ monitor, mensagensIniciais, usuarioAtual, onBack, apiUrl, onNewData }) {
     const [mensagens, setMensagens] = useState(mensagensIniciais);
     const [novaMensagem, setNovaMensagem] = useState('');
     const messagesEndRef = useRef(null);
@@ -14,7 +14,7 @@ export default function ChatWindow({ monitor, mensagensIniciais, usuarioAtual, o
         scrollToBottom();
     }, [mensagens]);
 
-    const handleSend = (e) => {
+    const handleSend = async (e) => {
         e.preventDefault();
         if (!novaMensagem.trim()) return;
 
@@ -22,13 +22,30 @@ export default function ChatWindow({ monitor, mensagensIniciais, usuarioAtual, o
         const horarioStr = `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
 
         const msg = {
-            remetente: usuarioAtual.nome, // As sent by the current user
+            destinatario: monitor.nome,
+            remetente: usuarioAtual.nome,
             texto: novaMensagem.trim(),
             horario: horarioStr
         };
 
-        setMensagens([...mensagens, msg]);
-        setNovaMensagem('');
+        try {
+            const res = await fetch(`${apiUrl}/mensagens/`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(msg)
+            });
+
+            if (res.ok) {
+                const createdMsg = await res.json();
+                setMensagens([...mensagens, createdMsg]);
+                setNovaMensagem('');
+                if (onNewData) onNewData('Mensagem', createdMsg);
+            } else {
+                alert('Falha ao enviar mensagem.');
+            }
+        } catch (err) {
+            alert('Erro de conexão ao enviar mensagem.');
+        }
     };
 
     return (

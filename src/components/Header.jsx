@@ -11,6 +11,7 @@ export default function Header({ screen, setScreen, Usuario }) {
             {screen === 'materiais' && <h1>Materiais</h1>}
             {screen === 'chat' && <h1>Chat</h1>}
             {screen === 'cadastro' && <h1>Cadastros</h1>}
+            {screen === 'perfil' && <h1>Perfil</h1>}
             <div className="header-actions">
                 {isDev && (
                     <button 
@@ -21,7 +22,7 @@ export default function Header({ screen, setScreen, Usuario }) {
                         ⚙️
                     </button>
                 )}
-                <div className="Usuario">
+                <div className="Usuario" onClick={() => setScreen('perfil')} title="Ver Perfil">
                     {Usuario.fotoPerfil ? <img src="./Perfil.svg" alt="Perfil" /> : <p>{Usuario.nome[0] + Usuario.sobrenome[0]}</p>}
                 </div>
             </div>

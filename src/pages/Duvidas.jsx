@@ -3,7 +3,7 @@ import CardDuvida from "../components/CardDuvida"
 import DuvidaModal from "../components/DuvidaModal"
 import './Duvidas.css'
 
-export default function Duvidas({ Usuario, Materias, ListaDuvidas = [], apiUrl }) {
+export default function Duvidas({ Usuario, Materias, ListaDuvidas = [], apiUrl, onNewData }) {
 
     const [FiltroMateria, setFiltroMateria] = useState('todas')
     const [FiltroStatus, setFiltroStatus] = useState('todas')
@@ -34,6 +34,7 @@ export default function Duvidas({ Usuario, Materias, ListaDuvidas = [], apiUrl }
             horario: dataStr,
             duvida: novaDuvida,
             status: 'Pendente',
+            usuario: Usuario._id || Usuario.id,
             comentarios: []
         }
         
@@ -44,10 +45,12 @@ export default function Duvidas({ Usuario, Materias, ListaDuvidas = [], apiUrl }
                 body: JSON.stringify(newDuvidaObj)
             })
             if (res.ok) {
-                setLocalDuvidas([newDuvidaObj, ...localDuvidas])
-                setNovaDuvida('')
-                setMateriaDuvida('')
-                setShowForm(false)
+                const created = await res.json();
+                setLocalDuvidas([created, ...localDuvidas]);
+                setNovaDuvida('');
+                setMateriaDuvida('');
+                setShowForm(false);
+                if (onNewData) onNewData('Duvida', created);
             } else {
                 alert('Falha ao enviar dúvida.')
             }
@@ -76,9 +79,11 @@ export default function Duvidas({ Usuario, Materias, ListaDuvidas = [], apiUrl }
                             required
                         >
                             <option value="">Selecione a matéria</option>
-                            {Object.values(Materias).map((materia, index) => (
-                                <option key={index} value={materia.codigo}>{materia.codigo} - {materia.nome}</option>
-                            ))}
+                            {Object.values(Materias).map((materia, index) => {
+                                const text = `${materia.codigo} - ${materia.nome}`;
+                                const shortText = text.length > 40 ? text.substring(0, 37) + '...' : text;
+                                return <option key={index} value={materia.codigo} title={text}>{shortText}</option>;
+                            })}
                         </select>
                     </div>
                     <div className="form-group">
@@ -99,9 +104,11 @@ export default function Duvidas({ Usuario, Materias, ListaDuvidas = [], apiUrl }
             <div className="filtros-container">
                 <select className="select-filtro" name="filtro-materia" id="filtro-materia" onChange={(e) => setFiltroMateria(e.target.value)}>
                     <option value="todas">Filtrar por matéria</option>
-                    {Object.values(Materias).map((materia, index) => (
-                        <option key={index} value={materia.codigo}>{materia.codigo} - {materia.nome}</option>
-                    ))}
+                    {Object.values(Materias).map((materia, index) => {
+                        const text = `${materia.codigo} - ${materia.nome}`;
+                        const shortText = text.length > 40 ? text.substring(0, 37) + '...' : text;
+                        return <option key={index} value={materia.codigo} title={text}>{shortText}</option>;
+                    })}
                 </select>
                 <select className="select-filtro" name="filtro-status" id="filtro-status" onChange={(e) => setFiltroStatus(e.target.value)}>
                     <option value="todas">Filtrar por status</option>

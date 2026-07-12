@@ -9,6 +9,7 @@ import Chat from './pages/Chat'
 import Header from './components/Header'
 import Login from './pages/Login'
 import Cadastro from './pages/Cadastro'
+import Perfil from './pages/Perfil'
 
 const API_BASE_URL = 'https://e-monitorwebapi.onrender.com/api';
 
@@ -127,6 +128,38 @@ function App() {
     return <div className="error-screen" style={{ padding: '20px', textAlign: 'center', color: 'red' }}><p>Erro ao conectar com API: {error}</p></div>;
   }
 
+  const handleLogout = () => {
+    setUsuarioLogado(null);
+    setScreen('inicio');
+  };
+
+  const handleNewData = (type, newData) => {
+    setData(prevData => {
+      if (type === 'Mensagem') {
+         const interlocutor = newData.remetente !== usuarioLogado.nome ? newData.remetente : newData.destinatario;
+         const currentMensagens = prevData.Mensagens[interlocutor] || [];
+         return {
+           ...prevData,
+           Mensagens: {
+             ...prevData.Mensagens,
+             [interlocutor]: [...currentMensagens, newData]
+           }
+         };
+      } else if (type === 'Material') {
+         return {
+           ...prevData,
+           MateriaisEstudo: [newData, ...prevData.MateriaisEstudo]
+         };
+      } else if (type === 'Duvida') {
+         return {
+           ...prevData,
+           Duvidas: [newData, ...prevData.Duvidas]
+         };
+      }
+      return prevData;
+    });
+  };
+
   const { Materias, Usuarios: Usuario, Provas, Duvidas: ListaDuvidas, Mensagens, MateriaisEstudo } = data;
 
   return (
@@ -141,10 +174,11 @@ function App() {
         setScreen={setScreen}
       />}
       {screen === 'horarios' && <Horarios Materias={Materias} />}
-      {screen === 'duvidas' && <Duvidas Usuario={Usuario} Materias={Materias} ListaDuvidas={ListaDuvidas} apiUrl={API_BASE_URL}/>}
-      {screen === 'materiais' && <Materiais Materias={Materias} MateriaisEstudoIniciais={MateriaisEstudo} Usuario={Usuario}/>}
-      {screen === 'chat' && <Chat Materias={Materias} Mensagens={Mensagens} Usuario={Usuario} />}
+      {screen === 'duvidas' && <Duvidas Usuario={Usuario} Materias={Materias} ListaDuvidas={ListaDuvidas} apiUrl={API_BASE_URL} onNewData={handleNewData}/>}
+      {screen === 'materiais' && <Materiais Materias={Materias} MateriaisEstudoIniciais={MateriaisEstudo} Usuario={Usuario} apiUrl={API_BASE_URL} onNewData={handleNewData}/>}
+      {screen === 'chat' && <Chat Materias={Materias} Mensagens={Mensagens} Usuario={Usuario} apiUrl={API_BASE_URL} onNewData={handleNewData} />}
       {screen === 'cadastro' && <Cadastro apiUrl={API_BASE_URL} />}
+      {screen === 'perfil' && <Perfil Usuario={Usuario} Materias={Materias} onLogout={handleLogout} />}
       <TabBar screen={screen} setScreen={setScreen} />
     </>
   )
