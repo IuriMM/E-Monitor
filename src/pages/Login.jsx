@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './Login.css';
+import logoImg from '../assets/logo.png';
 
 export default function Login({ onLogin, apiUrl }) {
   const [matricula, setMatricula] = useState('');
@@ -47,7 +48,7 @@ export default function Login({ onLogin, apiUrl }) {
     <div className="login-container">
       <div className="login-box">
         <div className="login-logo">
-          <img src="/src/assets/logo.png" className="Logo" alt="eMonitor Logo" />
+          <img src={logoImg} className="Logo" alt="eMonitor Logo" />
         </div>
         <h2>Entrar no eMonitor</h2>
         <form onSubmit={handleSubmit} className="login-form">
