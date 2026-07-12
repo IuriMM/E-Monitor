@@ -1,5 +1,6 @@
 .page {
   animation: fadeSlideUp 0.3s ease-out forwards;
+  margin-bottom: 75px;
 }
 
 @keyframes fadeSlideUp {
@@ -11,4 +12,20 @@
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+.glass-card {
+  /* Semi-transparent background (White with 15% opacity) */
+  background: rgba(255, 255, 255, 0.15); 
+  
+  /* The magic blur effect on the background behind the card */
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px); /* Safari support */
+  
+  /* Subtle white border to simulate light reflecting off the edges */
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  
+  /* Rounded corners and a soft shadow for depth */
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
 }

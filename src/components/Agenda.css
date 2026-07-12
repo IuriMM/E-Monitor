@@ -5,7 +5,10 @@
     padding: 20px;
     width: 100%;
     font-family: inherit;
+    max-width: 400px;
+    margin: 20px auto;
 }
+
 
 .agenda-header {
     display: flex;

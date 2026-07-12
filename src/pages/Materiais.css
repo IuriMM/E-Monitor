@@ -1,0 +1,39 @@
+.page-materiais {
+    padding: 20px;
+    padding-bottom: 80px; /* space for tab bar */
+    height: 100vh;
+    box-sizing: border-box;
+    overflow-y: auto;
+}
+
+.materiais-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.btn-novo-material {
+    background-color: #4f46e5;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(79, 70, 229, 0.3);
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+.btn-novo-material:hover {
+    background-color: #4338ca;
+    transform: translateY(-1px);
+}
+
+.materiais-list {
+    display: flex;
+    flex-direction: column;
+}

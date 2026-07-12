@@ -72,5 +72,25 @@
         }
       ]
     }
+  ],
+  "Mensagens": {
+    "José": [
+      { "remetente": "José", "texto": "Olá João! Como posso ajudar com Cálculo hoje?", "horario": "10:00" },
+      { "remetente": "João", "texto": "Estou com uma dúvida sobre integrais duplas.", "horario": "10:05" }
+    ],
+    "Maria": [],
+    "Lorenzo": [],
+    "Julia": []
+  },
+  "MateriaisEstudo": [
+    {
+      "id": 1,
+      "materia": "Calculo A",
+      "autor": "José",
+      "titulo": "Lista 1 - Limites e Derivadas",
+      "comentario": "Esta lista foca na introdução às derivadas parciais. Façam os exercícios ímpares.",
+      "link": "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+      "data": "10/07/2026"
+    }
   ]
 }

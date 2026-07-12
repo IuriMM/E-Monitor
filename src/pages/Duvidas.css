@@ -1,8 +1,108 @@
+.duvidas-page {
+    padding: 0 5%;
+}
+
+.duvidas-header-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin: 10px 0;
+}
+
+.btn-nova-duvida {
+    background-color: #646cff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(100, 108, 255, 0.3);
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+.btn-nova-duvida:hover {
+    background-color: #535bf2;
+    transform: translateY(-2px);
+}
+
+.form-nova-duvida {
+    padding: 20px;
+    margin-bottom: 20px;
+    animation: fadeSlideDown 0.3s ease-out;
+}
+
+@keyframes fadeSlideDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.form-nova-duvida h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: var(--text-color, #fff);
+}
+
+.form-nova-duvida .form-group {
+    margin-bottom: 15px;
+}
+
+.form-nova-duvida select,
+.form-nova-duvida textarea {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+    background-color: rgba(255, 255, 255, 0.8);
+    font-family: inherit;
+    font-size: 14px;
+    resize: vertical;
+}
+
+.form-nova-duvida select:focus,
+.form-nova-duvida textarea:focus {
+    outline: 2px solid #646cff;
+}
+
+.btn-enviar {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.btn-enviar:hover:not(:disabled) {
+    background-color: #45a049;
+}
+
+.btn-enviar:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.filtros-container {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
 .select-filtro{
-    margin: 20px;
     padding: 10px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    font-size: 16px;
-    font-weight: 400;
+    border-radius: 20px;
+    border: none;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    color: var(--text-color, #000);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.5);
+    flex: 1;
+}
+
+.select-filtro:focus {
+    outline: none;
 }
