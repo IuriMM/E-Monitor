@@ -35,7 +35,7 @@ export default function Horarios({Materias}){
                     cardsDoDia
                 ) : (
                     <div className="sem-aula">
-                        <p>Dia sem aula</p>
+                        <p>Dia sem monitoria</p>
                     </div>
                 )}
             </div>

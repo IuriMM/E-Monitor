@@ -14,13 +14,15 @@ function App() {
 
   const Materias = db.Materias;
   const Usuario = db.Usuarios;
+  const Provas = db.Provas;
+  const ListaDuvidas = db.Duvidas;
 
   return (
     <>
       <Header screen={screen} Usuario={Usuario} />
-      {screen === 'inicio' && <Inicio />}
+      {screen === 'inicio' && <Inicio Usuario={Usuario} Materias={Materias} Provas={Provas}/>}
       {screen === 'horarios' && <Horarios Materias={Materias} />}
-      {screen === 'duvidas' && <Duvidas Usuario={Usuario} Materias={Materias}/>}
+      {screen === 'duvidas' && <Duvidas Usuario={Usuario} Materias={Materias} ListaDuvidas={ListaDuvidas}/>}
       {screen === 'materiais' && <Materiais />}
       {screen === 'chat' && <Chat />}
       <TabBar screen={screen} setScreen={setScreen} />
