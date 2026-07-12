@@ -1,5 +1,6 @@
 import { useState } from "react"
 import CardDuvida from "../components/CardDuvida"
+import DuvidaModal from "../components/DuvidaModal"
 import './Duvidas.css'
 
 export default function Duvidas({ Usuario, Materias, ListaDuvidas = [] }) {
@@ -7,6 +8,7 @@ export default function Duvidas({ Usuario, Materias, ListaDuvidas = [] }) {
     const [FiltroMateria, setFiltroMateria] = useState('todas')
     const [FiltroStatus, setFiltroStatus] = useState('todas')
     const [FiltroData, setFiltroData] = useState('todas')
+    const [selectedDuvida, setSelectedDuvida] = useState(null)
 
     return (
         <div className="page">
@@ -31,10 +33,19 @@ export default function Duvidas({ Usuario, Materias, ListaDuvidas = [] }) {
                             horario={duvidaItem.horario}
                             duvida={duvidaItem.duvida}
                             StatusDuvida={duvidaItem.status || 'Pendente'}
+                            onClick={() => setSelectedDuvida(duvidaItem)}
                         />
                     </div>
                 ))}
             </div>
+
+            {selectedDuvida && (
+                <DuvidaModal 
+                    duvida={selectedDuvida} 
+                    NomeUsuario={Usuario.nome + ' ' + Usuario.sobrenome[0] + '.'}
+                    onClose={() => setSelectedDuvida(null)} 
+                />
+            )}
         </div>
     )
 }

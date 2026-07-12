@@ -40,14 +40,37 @@
   },
   "Duvidas": [
     {
+      "id": 1,
       "materia": "Calculo A",
       "horario": "15:32",
-      "duvida": "Não entendi como funciona a regra de derivada da função composta"
+      "duvida": "Não entendi como funciona a regra de derivada da função composta",
+      "status": "Respondida",
+      "comentarios": [
+        {
+          "usuario": "José",
+          "classe": "Monitor",
+          "texto": "A regra da cadeia diz que a derivada de f(g(x)) é f'(g(x)) * g'(x). Tente aplicar a derivada de fora e depois multiplique pela derivada de dentro."
+        },
+        {
+          "usuario": "João",
+          "classe": "Aluno",
+          "texto": "Faz sentido, acho que errei na hora de derivar a função de dentro. Valeu!"
+        }
+      ]
     },
     {
+      "id": 2,
       "materia": "Programação Orientada a Objetos",
       "horario": "18:00 - 20:00",
-      "duvida": "Qual a difereca entre classes e objetos?"
+      "duvida": "Qual a difereca entre classes e objetos?",
+      "status": "Em Andamento",
+      "comentarios": [
+        {
+          "usuario": "Lorenzo",
+          "classe": "Monitor",
+          "texto": "A diferença principal é que a classe é o molde (a planta da casa), e o objeto é a instância criada a partir desse molde (a casa construída)."
+        }
+      ]
     }
   ]
 }
