@@ -3,7 +3,7 @@ import './ModalNovoMaterial.css';
 
 export default function ModalNovoMaterial({ Materias, onSave, onClose }) {
     const [titulo, setTitulo] = useState('');
-    const [materia, setMateria] = useState(Object.values(Materias)[0]?.nome || '');
+    const [materia, setMateria] = useState(Object.values(Materias)[0]?.codigo || '');
     const [comentario, setComentario] = useState('');
     const [link, setLink] = useState('');
 
@@ -34,7 +34,7 @@ export default function ModalNovoMaterial({ Materias, onSave, onClose }) {
                         <label>Matéria</label>
                         <select required value={materia} onChange={e => setMateria(e.target.value)}>
                             {Object.values(Materias).map((m, index) => (
-                                <option key={index} value={m.nome}>{m.nome}</option>
+                                <option key={index} value={m.codigo}>{m.nome}</option>
                             ))}
                         </select>
                     </div>

@@ -140,7 +140,14 @@ export default function Duvidas({ Usuario, Materias, ListaDuvidas = [], apiUrl, 
                 <DuvidaModal 
                     duvida={selectedDuvida} 
                     NomeUsuario={Usuario.nome + ' ' + Usuario.sobrenome[0] + '.'}
+                    UsuarioAtual={Usuario}
+                    apiUrl={apiUrl}
                     onClose={() => setSelectedDuvida(null)} 
+                    onComentarioAdicionado={(updatedDuvida) => {
+                        const newDuvidas = localDuvidas.map(d => (d._id || d.id) === (updatedDuvida._id || updatedDuvida.id) ? updatedDuvida : d);
+                        setLocalDuvidas(newDuvidas);
+                        setSelectedDuvida(updatedDuvida);
+                    }}
                 />
             )}
         </div>

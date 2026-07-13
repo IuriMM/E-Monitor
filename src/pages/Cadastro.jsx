@@ -5,7 +5,7 @@ import './Cadastro.css';
 
 function FormUsuario({ apiUrl, materias }) {
   const [formData, setFormData] = useState({
-    nome: '', sobrenome: '', curso: '', matricula: '', senha: '', materias: []
+    nome: '', sobrenome: '', curso: '', matricula: '', senha: '', materias: [], monitor: []
   });
   const [msg, setMsg] = useState({ text: '', type: '' });
 
@@ -20,6 +20,15 @@ function FormUsuario({ apiUrl, materias }) {
     }
   };
 
+  const handleMonitorChange = (e) => {
+    const value = e.target.value;
+    if (e.target.checked) {
+      setFormData({ ...formData, monitor: [...formData.monitor, value] });
+    } else {
+      setFormData({ ...formData, monitor: formData.monitor.filter(m => m !== value) });
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMsg({ text: 'Salvando...', type: 'info' });
@@ -31,7 +40,7 @@ function FormUsuario({ apiUrl, materias }) {
       });
       if (res.ok) {
         setMsg({ text: 'Usuário cadastrado com sucesso!', type: 'success' });
-        setFormData({ nome: '', sobrenome: '', curso: '', matricula: '', senha: '', materias: [] });
+        setFormData({ nome: '', sobrenome: '', curso: '', matricula: '', senha: '', materias: [], monitor: [] });
       } else {
         const error = await res.json();
         setMsg({ text: `Erro: ${error.detail || 'Falha ao cadastrar'}`, type: 'error' });
@@ -85,6 +94,23 @@ function FormUsuario({ apiUrl, materias }) {
         {materias.length === 0 && <p className="warning-text">Nenhuma matéria cadastrada no sistema. Cadastre matérias primeiro.</p>}
       </div>
 
+      <div className="form-group full-width">
+        <label>Monitor (Selecione as matérias que você é monitor)</label>
+        <div className="checkbox-grid">
+          {materias.map(mat => (
+            <label key={`monitor-${mat.codigo}`} className="checkbox-label">
+              <input 
+                type="checkbox" 
+                value={mat.codigo} 
+                checked={formData.monitor.includes(mat.codigo)}
+                onChange={handleMonitorChange}
+              />
+              {mat.codigo} - {mat.nome}
+            </label>
+          ))}
+        </div>
+      </div>
+
       <button type="submit" className="submit-btn">Salvar Usuário</button>
       {msg.text && <p className={`form-msg ${msg.type}`}>{msg.text}</p>}
     </form>
@@ -92,7 +118,7 @@ function FormUsuario({ apiUrl, materias }) {
 }
 
 function FormMateria({ apiUrl, onMateriaAdded }) {
-  const [formData, setFormData] = useState({ codigo: '', nome: '' });
+  const [formData, setFormData] = useState({ codigo: '', nome: '', monitoresStr: '' });
   const [msg, setMsg] = useState({ text: '', type: '' });
 
   const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -100,15 +126,26 @@ function FormMateria({ apiUrl, onMateriaAdded }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMsg({ text: 'Salvando...', type: 'info' });
+    
+    // Converte a string de matrículas separadas por vírgula em um array de strings
+    const monitores = formData.monitoresStr
+      ? formData.monitoresStr.split(',').map(m => m.trim()).filter(m => m !== '')
+      : [];
+
     try {
       const res = await fetch(`${apiUrl}/materias/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...formData, monitores: [], cronograma: [] })
+        body: JSON.stringify({ 
+          codigo: formData.codigo, 
+          nome: formData.nome, 
+          monitores: monitores, 
+          cronograma: [] 
+        })
       });
       if (res.ok) {
         setMsg({ text: 'Matéria cadastrada com sucesso!', type: 'success' });
-        setFormData({ codigo: '', nome: '' });
+        setFormData({ codigo: '', nome: '', monitoresStr: '' });
         onMateriaAdded();
       } else {
         const error = await res.json();
@@ -129,6 +166,10 @@ function FormMateria({ apiUrl, onMateriaAdded }) {
       <div className="form-group full-width">
         <label>Nome da Matéria (Ex: Cálculo A)</label>
         <input type="text" name="nome" value={formData.nome} onChange={handleChange} required />
+      </div>
+      <div className="form-group full-width">
+        <label>Monitores (Matrículas separadas por vírgula)</label>
+        <input type="text" name="monitoresStr" value={formData.monitoresStr} onChange={handleChange} placeholder="Ex: 2021001, 2022005" />
       </div>
       <button type="submit" className="submit-btn">Salvar Matéria</button>
       {msg.text && <p className={`form-msg ${msg.type}`}>{msg.text}</p>}

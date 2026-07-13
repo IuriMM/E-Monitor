@@ -13,10 +13,6 @@
 
 }
 
-.Logo:hover{
-  animation:Logo 1s forwards;
-}
-
 @keyframes Logo {
   0% {
     transform: scale(1);

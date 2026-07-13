@@ -56,6 +56,11 @@
   border-radius: 50%;
 }
 
+.notification-icon img {
+  width: 32px;
+  height: 32px;
+}
+
 .chat-icon {
   background-color: #e3f2fd;
 }
@@ -93,4 +98,26 @@
 
 .monitorias-lista li {
   margin-bottom: 4px;
+}
+
+@media (min-width: 900px) {
+  .inicio-page {
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: center;
+    max-width: 1200px;
+    margin: 20px auto 0 auto;
+    padding: 0 20px;
+  }
+
+  .inicio-page .agenda {
+    margin: 0;
+    flex-shrink: 0;
+  }
+
+  .notifications-container {
+    flex: 1;
+    margin: 0;
+    padding: 0 0 0 20px;
+  }
 }

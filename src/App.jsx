@@ -14,7 +14,7 @@ import Perfil from './pages/Perfil'
 const API_BASE_URL = 'https://e-monitorwebapi.onrender.com/api';
 
 function App() {
-  const [screen, setScreen] = useState('horarios')
+  const [screen, setScreen] = useState('inicio')
   const [usuarioLogado, setUsuarioLogado] = useState(null)
   
   const [data, setData] = useState({
@@ -69,20 +69,23 @@ function App() {
         ]);
 
         const materiasUsuario = usuarioLogado.materias || [];
+        const monitoriasUsuario = usuarioLogado.monitor || [];
+        const todasAsMaterias = [...new Set([...materiasUsuario, ...monitoriasUsuario])];
+        
         const nomeUsuario = usuarioLogado.nome;
 
-        // Formata Materias (Filtra apenas as que o usuário possui)
+        // Formata Materias (Filtra apenas as que o usuário possui ou monitora)
         const formatMaterias = {};
         materiasList.forEach(materia => {
-          if (materiasUsuario.includes(materia.codigo)) {
+          if (todasAsMaterias.includes(materia.codigo)) {
             formatMaterias[materia.codigo] = materia;
           }
         });
 
-        // Filtra Provas, Duvidas e Materiais pelas matérias do usuário
-        const provasFiltradas = provasList.filter(p => materiasUsuario.includes(p.materia));
-        const duvidasFiltradas = duvidasList.filter(d => materiasUsuario.includes(d.materia));
-        const materiaisFiltrados = materiaisList.filter(m => materiasUsuario.includes(m.materia));
+        // Filtra Provas, Duvidas e Materiais pelas matérias do usuário e as que ele monitora
+        const provasFiltradas = provasList.filter(p => todasAsMaterias.includes(p.materia));
+        const duvidasFiltradas = duvidasList.filter(d => todasAsMaterias.includes(d.materia));
+        const materiaisFiltrados = materiaisList.filter(m => todasAsMaterias.includes(m.materia));
 
         // Formata Mensagens (Filtra apenas as enviadas/recebidas pelo usuário atual)
         const formatMensagens = {};

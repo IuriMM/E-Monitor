@@ -4,6 +4,9 @@
     align-items: center;
     margin: 20px 20px;
     cursor: pointer;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
     p{
         font-size: 16px;
     }
@@ -20,4 +23,10 @@
     height: 70vh; /* Para centralizar verticalmente na sessão */
     color: #888;
     font-size: 1.2rem;
+}
+
+.materias-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }

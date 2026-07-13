@@ -8,6 +8,7 @@
     flex-direction: column;
     gap: 10px;
     transition: transform 0.2s, box-shadow 0.2s;
+    max-width: 600px;
 }
 
 .card-material:hover {

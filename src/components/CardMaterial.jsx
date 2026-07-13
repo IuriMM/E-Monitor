@@ -1,7 +1,7 @@
 import React from 'react';
 import './CardMaterial.css';
 
-export default function CardMaterial({ material }) {
+export default function CardMaterial({ material, NomeMateria }) {
     return (
         <div className="card-material">
             <div className="material-header">
@@ -9,7 +9,7 @@ export default function CardMaterial({ material }) {
                     <h3>{material.titulo}</h3>
                     <p>Por {material.autor} • {material.data}</p>
                 </div>
-                <span className="material-tag">{material.materia}</span>
+                <span className="material-tag">{NomeMateria || material.materia}</span>
             </div>
             
             <div className="material-comentario">

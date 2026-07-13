@@ -44,7 +44,9 @@ export default function Inicio({
                 
                 <div className="notifications-grid">
                     <div className="notification-card clickable" onClick={() => setScreen('chat')}>
-                        <div className="notification-icon chat-icon"></div>
+                        <div className="notification-icon chat-icon">
+                            <img src="/chat.svg" alt="Chat" />
+                        </div>
                         <div className="notification-content">
                             <h3>Chat</h3>
                             <p>{totalConversas > 0 ? `Você tem ${totalConversas} conversa(s) ativa(s).` : 'Nenhuma conversa recente.'}</p>
@@ -52,7 +54,9 @@ export default function Inicio({
                     </div>
 
                     <div className="notification-card clickable" onClick={() => setScreen('materiais')}>
-                        <div className="notification-icon materiais-icon"></div>
+                        <div className="notification-icon materiais-icon">
+                            <img src="/book.svg" alt="Materiais" />
+                        </div>
                         <div className="notification-content">
                             <h3>Materiais</h3>
                             <p>{qtdMateriais > 0 ? `${qtdMateriais} material(is) de estudo disponível(is).` : 'Nenhum material adicionado.'}</p>
@@ -60,7 +64,9 @@ export default function Inicio({
                     </div>
 
                     <div className="notification-card clickable" onClick={() => setScreen('horarios')}>
-                        <div className="notification-icon monitoria-icon"></div>
+                        <div className="notification-icon monitoria-icon">
+                            <img src="/monitor.svg" alt="Monitoria" />
+                        </div>
                         <div className="notification-content">
                             <h3>Monitorias Hoje ({hojeStr})</h3>
                             {monitoriasHoje.length > 0 ? (

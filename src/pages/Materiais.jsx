@@ -57,7 +57,7 @@ export default function Materiais({ Materias, MateriaisEstudoIniciais, Usuario, 
                     {Object.values(Materias).map((materia, index) => {
                         const text = materia.nome;
                         const shortText = text.length > 40 ? text.substring(0, 37) + '...' : text;
-                        return <option key={index} value={materia.nome} title={text}>{shortText}</option>;
+                        return <option key={index} value={materia.codigo} title={text}>{shortText}</option>;
                     })}
                 </select>
 
@@ -68,9 +68,10 @@ export default function Materiais({ Materias, MateriaisEstudoIniciais, Usuario, 
 
             <div className="materiais-list">
                 {materiaisFiltrados.length > 0 ? (
-                    materiaisFiltrados.map(material => (
-                        <CardMaterial key={material.id} material={material} />
-                    ))
+                    materiaisFiltrados.map(material => {
+                        const nomeMateria = Object.values(Materias).find(m => m.codigo === material.materia)?.nome || material.materia;
+                        return <CardMaterial key={material.id || material._id || Math.random()} material={material} NomeMateria={nomeMateria} />
+                    })
                 ) : (
                     <p style={{ textAlign: 'center', color: '#666', marginTop: '20px' }}>
                         Nenhum material encontrado para esta matéria.
