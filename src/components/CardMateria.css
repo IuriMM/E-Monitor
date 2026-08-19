@@ -4,9 +4,9 @@
     box-shadow: var(--shadow-sm);
     overflow: hidden;
     animation: fadeSlideUp 0.3s ease-out forwards;
-    width: 100%;
     border-left: 4px solid var(--primary);
     transition: transform 0.2s, box-shadow 0.2s;
+    margin: 20px;
 }
 
 .card-materia:hover {

@@ -2,6 +2,7 @@
     display: flex;
     flex-direction: column;
     padding: 20px;
+    padding-bottom: 110px; /* 20px extra padding + 90px for tabbar */
     height: calc(100dvh - 70px) !important; /* 100dvh minus header */
     min-height: 0 !important; /* Override .page min-height */
     box-sizing: border-box;

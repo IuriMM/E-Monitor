@@ -5,8 +5,8 @@ import { apiPost } from '../api/client';
 import { User, Lock, Loader2 } from 'lucide-react';
 
 export default function Login({ onLogin, sessionExpired }) {
-  const [matricula, setMatricula] = useState('');
-  const [senha, setSenha] = useState('');
+  const [matricula, setMatricula] = useState('2024100');
+  const [senha, setSenha] = useState('Demo@123');
   const [erro, setErro] = useState('');
   const [loading, setLoading] = useState(false);
 

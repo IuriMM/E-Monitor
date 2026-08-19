@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { apiPost } from '../api/client';
-import { Send } from 'lucide-react';
+import { Send, X } from 'lucide-react';
 import './ChatWindow.css';
 
 export default function ChatWindow({ monitor, mensagensIniciais, usuarioAtual, onBack, onNewData }) {
@@ -40,7 +40,7 @@ export default function ChatWindow({ monitor, mensagensIniciais, usuarioAtual, o
             setMensagens([...mensagens, createdMsg]);
             if (onNewData) onNewData('Mensagem', createdMsg);
         } catch (err) {
-            alert(`Falha ao enviar mensagem: ${err.message}`);
+            alert('Falha ao enviar mensagem. Tente novamente.');
             setNovaMensagem(msgTexto); // restore text on failure
         } finally {
             setIsSending(false);
@@ -50,8 +50,8 @@ export default function ChatWindow({ monitor, mensagensIniciais, usuarioAtual, o
     return (
         <div className="chat-window">
             <div className="chat-header">
-                <button className="back-btn" onClick={onBack}>
-                    &larr;
+                <button className="back-btn" onClick={onBack} aria-label="Fechar Chat">
+                    <X size={24} />
                 </button>
                 <div className="chat-header-info">
                     <h2>{monitor.nome}</h2>

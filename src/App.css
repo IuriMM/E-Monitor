@@ -16,6 +16,44 @@
   }
 }
 
+.global-loading-screen {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+  background-color: var(--bg-color);
+  color: var(--primary);
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+}
+
+.global-loading-screen p {
+  margin-top: 16px;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text-muted);
+  animation: pulse 1.5s infinite;
+}
+
+.global-spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes pulse {
+  0% { opacity: 0.6; }
+  50% { opacity: 1; }
+  100% { opacity: 0.6; }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
 .glass-card {
   /* Semi-transparent background (White with 15% opacity) */
   background: rgba(255, 255, 255, 0.15); 

@@ -1,4 +1,5 @@
 import { useState, useEffect, lazy, Suspense } from 'react'
+import { Loader2 } from 'lucide-react'
 import './App.css'
 import TabBar from './components/TabBar'
 import Header from './components/Header'
@@ -136,7 +137,12 @@ function App() {
   }
 
   if (isLoading) {
-    return <div className="loading-screen" style={{ padding: '20px', textAlign: 'center' }}><p>Carregando dados...</p></div>;
+    return (
+      <div className="global-loading-screen">
+        <Loader2 className="global-spinner" size={48} />
+        <p>Carregando dados...</p>
+      </div>
+    );
   }
 
   if (error) {
@@ -182,7 +188,12 @@ function App() {
   return (
     <>
       <Header screen={screen} setScreen={setScreen} Usuario={Usuario} />
-      <Suspense fallback={<div className="loading-screen" style={{ padding: '20px', textAlign: 'center' }}><p>Carregando...</p></div>}>
+      <Suspense fallback={
+        <div className="global-loading-screen">
+          <Loader2 className="global-spinner" size={48} />
+          <p>Carregando...</p>
+        </div>
+      }>
         {screen === 'inicio' && <Inicio
           Usuario={Usuario}
           Materias={Materias}
