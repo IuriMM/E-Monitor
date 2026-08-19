@@ -26,6 +26,9 @@
 }
 
 .form-nova-duvida {
+    background-color: var(--surface-card);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
     padding: 20px;
     margin-bottom: 20px;
     animation: fadeSlideDown 0.3s ease-out;
@@ -39,7 +42,9 @@
 .form-nova-duvida h3 {
     margin-top: 0;
     margin-bottom: 15px;
-    color: var(--text-color, #fff);
+    color: var(--text-main);
+    font-size: 18px;
+    font-weight: 600;
 }
 
 .form-nova-duvida .form-group {
@@ -50,17 +55,22 @@
 .form-nova-duvida textarea {
     width: 100%;
     padding: 12px;
-    border-radius: 8px;
-    border: none;
-    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: var(--radius-md);
+    border: 1px solid rgba(0,0,0,0.1);
+    background-color: var(--bg-color);
+    color: var(--text-main);
     font-family: inherit;
     font-size: 14px;
     resize: vertical;
+    outline: none;
+    transition: all 0.2s ease;
 }
 
 .form-nova-duvida select:focus,
 .form-nova-duvida textarea:focus {
-    outline: 2px solid #646cff;
+    border-color: var(--primary);
+    background-color: var(--surface-card);
+    box-shadow: 0 0 0 3px var(--primary-light);
 }
 
 .btn-enviar {

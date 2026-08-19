@@ -1,19 +1,18 @@
 .card-material {
-    background-color: #fff;
-    border-radius: 12px;
+    background-color: var(--surface-card);
+    border-radius: var(--radius-md);
     padding: 20px;
-    margin-bottom: 15px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    box-shadow: var(--shadow-sm);
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 12px;
     transition: transform 0.2s, box-shadow 0.2s;
-    max-width: 600px;
+    height: 100%;
 }
 
 .card-material:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+    box-shadow: var(--shadow-md);
 }
 
 .material-header {
@@ -25,54 +24,56 @@
 .material-title h3 {
     margin: 0;
     font-size: 1.15rem;
-    color: #111;
+    color: var(--text-main);
 }
 
 .material-title p {
     margin: 5px 0 0 0;
     font-size: 0.85rem;
-    color: #666;
+    color: var(--text-muted);
 }
 
 .material-tag {
-    background-color: #e0e7ff;
-    color: #4f46e5;
+    background-color: var(--primary-light);
+    color: var(--primary);
     padding: 4px 10px;
-    border-radius: 15px;
+    border-radius: var(--radius-full);
     font-size: 0.75rem;
     font-weight: bold;
 }
 
 .material-comentario {
-    color: #4b5563;
+    color: var(--text-main);
     font-size: 0.95rem;
     line-height: 1.5;
     margin: 10px 0;
     padding: 10px;
-    background-color: #f9fafb;
-    border-left: 3px solid #4f46e5;
+    background-color: var(--bg-color);
+    border-left: 3px solid var(--primary);
     border-radius: 4px;
+    flex-grow: 1;
 }
 
 .material-footer {
     display: flex;
     justify-content: flex-end;
+    margin-top: auto;
 }
 
 .btn-download {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    background-color: #4f46e5;
+    background-color: var(--primary);
     color: white;
     text-decoration: none;
     padding: 8px 16px;
-    border-radius: 8px;
+    border-radius: var(--radius-md);
     font-size: 0.9rem;
     font-weight: 600;
     transition: background-color 0.2s;
 }
 
 .btn-download:hover {
-    background-color: #4338ca;
+    background-color: var(--primary-hover);
 }

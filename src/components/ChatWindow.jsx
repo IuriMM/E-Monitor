@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { apiPost } from '../api/client';
+import { Send } from 'lucide-react';
 import './ChatWindow.css';
 
 export default function ChatWindow({ monitor, mensagensIniciais, usuarioAtual, onBack, onNewData }) {
@@ -84,8 +85,8 @@ export default function ChatWindow({ monitor, mensagensIniciais, usuarioAtual, o
                     onChange={(e) => setNovaMensagem(e.target.value)}
                     disabled={isSending}
                 />
-                <button type="submit" className="send-btn" disabled={!novaMensagem.trim() || isSending}>
-                    ➤
+                <button type="submit" className="send-btn" disabled={!novaMensagem.trim() || isSending} aria-label="Enviar">
+                    <Send size={18} />
                 </button>
             </form>
         </div>

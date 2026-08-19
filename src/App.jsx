@@ -23,7 +23,8 @@ function App() {
     Provas: [],
     Duvidas: [],
     Mensagens: {},
-    MateriaisEstudo: []
+    MateriaisEstudo: [],
+    TodosUsuarios: []
   });
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -57,19 +58,24 @@ function App() {
       try {
         setIsLoading(true);
 
-        // Dispara requisições simultâneas (não precisamos buscar usuarios pois já temos o logado)
+        // Também buscamos a lista completa de usuários: é o único jeito de
+        // traduzir o "usuario" (id) gravado em cada dúvida/comentário para
+        // um nome de exibição — sem isso, a UI não tem como saber quem
+        // realmente escreveu cada dúvida.
         const [
           materiasList,
           provasList,
           duvidasList,
           mensagensList,
-          materiaisList
+          materiaisList,
+          usuariosList
         ] = await Promise.all([
           apiGet('/materias/', { signal: controller.signal }),
           apiGet('/provas/', { signal: controller.signal }),
           apiGet('/duvidas/', { signal: controller.signal }),
           apiGet('/mensagens/', { signal: controller.signal }),
-          apiGet('/materiais_estudo/', { signal: controller.signal })
+          apiGet('/materiais_estudo/', { signal: controller.signal }),
+          apiGet('/usuarios/', { signal: controller.signal })
         ]);
 
         const materiasUsuario = usuarioLogado.materias || [];
@@ -107,7 +113,8 @@ function App() {
           Provas: provasFiltradas,
           Duvidas: duvidasFiltradas,
           Mensagens: formatMensagens,
-          MateriaisEstudo: materiaisFiltrados
+          MateriaisEstudo: materiaisFiltrados,
+          TodosUsuarios: usuariosList
         });
 
       } catch (err) {
@@ -170,7 +177,7 @@ function App() {
     });
   };
 
-  const { Materias, Usuarios: Usuario, Provas, Duvidas: ListaDuvidas, Mensagens, MateriaisEstudo } = data;
+  const { Materias, Usuarios: Usuario, Provas, Duvidas: ListaDuvidas, Mensagens, MateriaisEstudo, TodosUsuarios } = data;
 
   return (
     <>
@@ -185,9 +192,9 @@ function App() {
           setScreen={setScreen}
         />}
         {screen === 'horarios' && <Horarios Materias={Materias} />}
-        {screen === 'duvidas' && <Duvidas Usuario={Usuario} Materias={Materias} ListaDuvidas={ListaDuvidas} onNewData={handleNewData}/>}
+        {screen === 'duvidas' && <Duvidas Usuario={Usuario} Materias={Materias} ListaDuvidas={ListaDuvidas} TodosUsuarios={TodosUsuarios} onNewData={handleNewData}/>}
         {screen === 'materiais' && <Materiais Materias={Materias} MateriaisEstudoIniciais={MateriaisEstudo} Usuario={Usuario} onNewData={handleNewData}/>}
-        {screen === 'chat' && <Chat Materias={Materias} Mensagens={Mensagens} Usuario={Usuario} onNewData={handleNewData} />}
+        {screen === 'chat' && <Chat Materias={Materias} Mensagens={Mensagens} Usuario={Usuario} TodosUsuarios={TodosUsuarios} onNewData={handleNewData} />}
         {screen === 'cadastro' && <Cadastro />}
         {screen === 'perfil' && <Perfil Usuario={Usuario} Materias={Materias} onLogout={handleLogout} />}
       </Suspense>

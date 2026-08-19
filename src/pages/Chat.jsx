@@ -1,30 +1,18 @@
-import { useState, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import ChatWindow from '../components/ChatWindow';
-import { apiGet } from '../api/client';
 import './Chat.css';
 
-export default function Chat({ Materias, Mensagens, Usuario, onNewData }) {
+export default function Chat({ Materias, Mensagens, Usuario, TodosUsuarios = [], onNewData }) {
     const [filtroMateria, setFiltroMateria] = useState('todas');
     const [selectedMonitor, setSelectedMonitor] = useState(null);
-    const [nomesMonitores, setNomesMonitores] = useState({});
 
-    useEffect(() => {
-        const controller = new AbortController();
-        const fetchUsuarios = async () => {
-            try {
-                const data = await apiGet('/usuarios/', { signal: controller.signal });
-                const mapa = {};
-                data.forEach(user => {
-                    mapa[user.matricula] = user.nome;
-                });
-                setNomesMonitores(mapa);
-            } catch (err) {
-                if (err.name !== 'AbortError') console.error("Erro ao buscar usuários para o chat:", err);
-            }
-        };
-        fetchUsuarios();
-        return () => controller.abort();
-    }, []);
+    const nomesMonitores = useMemo(() => {
+        const mapa = {};
+        TodosUsuarios.forEach(user => {
+            mapa[user.matricula] = user.nome;
+        });
+        return mapa;
+    }, [TodosUsuarios]);
 
     // Flatten monitors from all Materias
     const monitoresDisponiveis = [];

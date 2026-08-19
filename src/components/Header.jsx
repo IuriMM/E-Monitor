@@ -1,10 +1,11 @@
 import './Header.css'
+import { Settings } from 'lucide-react'
 
 export default function Header({ screen, setScreen, Usuario }) {
     const isDev = import.meta.env.DEV;
 
     return (
-        <header className='glass-card'>
+        <header className="main-header">
             {screen === 'inicio' && <h1>Inicio</h1>}
             {screen === 'horarios' && <h1>Horarios</h1>}
             {screen === 'duvidas' && <h1>Duvidas</h1>}
@@ -19,7 +20,7 @@ export default function Header({ screen, setScreen, Usuario }) {
                         onClick={() => setScreen('cadastro')}
                         title="Painel de Cadastros (Dev Only)"
                     >
-                        ⚙️
+                        <Settings size={22} color="white" />
                     </button>
                 )}
                 <button type="button" className="Usuario" onClick={() => setScreen('perfil')} title="Ver Perfil" aria-label="Ver Perfil">

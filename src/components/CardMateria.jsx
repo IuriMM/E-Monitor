@@ -1,4 +1,5 @@
 import './CardMateria.css'
+import { Clock, MapPin } from 'lucide-react'
 
 export default function CardMateria({ Materia, Monitores, Horario, Sala }) {
     return (
@@ -6,11 +7,13 @@ export default function CardMateria({ Materia, Monitores, Horario, Sala }) {
             <div className="card-materia-content">
                 <div className="materia-header">
                     <h2>{Materia}</h2>
-                    <span className="horario-badge">⏰ {Horario}</span>
+                    <span className="horario-badge">
+                        <Clock size={14} /> {Horario}
+                    </span>
                 </div>
                 <p className="monitor-name">Monitor(es): {Monitores}</p>
                 <div className="sala-info">
-                    <p>📍 {Sala}</p>
+                    <p><MapPin size={16} /> {Sala}</p>
                 </div>
             </div>
         </div>

@@ -1,6 +1,8 @@
 .page {
   animation: fadeSlideUp 0.3s ease-out forwards;
   padding-bottom: 90px; /* Space for TabBar */
+  min-height: 100vh;
+  background-color: var(--bg-color);
 }
 
 @keyframes fadeSlideUp {

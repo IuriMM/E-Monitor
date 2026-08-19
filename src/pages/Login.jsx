@@ -2,6 +2,7 @@ import { useState } from 'react';
 import './Login.css';
 import logoImg from '../assets/logo.png';
 import { apiPost } from '../api/client';
+import { User, Lock, Loader2 } from 'lucide-react';
 
 export default function Login({ onLogin, sessionExpired }) {
   const [matricula, setMatricula] = useState('');
@@ -38,7 +39,12 @@ export default function Login({ onLogin, sessionExpired }) {
 
   return (
     <div className="login-container">
-      <div className="login-box">
+      <div className="login-background-shapes">
+        <div className="shape shape-1"></div>
+        <div className="shape shape-2"></div>
+        <div className="shape shape-3"></div>
+      </div>
+      <div className="login-box fade-in-up">
         <div className="login-logo">
           <img src={logoImg} className="Logo" alt="eMonitor Logo" />
         </div>
@@ -47,31 +53,37 @@ export default function Login({ onLogin, sessionExpired }) {
         <form onSubmit={handleSubmit} className="login-form">
           <div className="input-group">
             <label htmlFor="matricula">Matrícula</label>
-            <input
-              type="text"
-              id="matricula"
-              value={matricula}
-              onChange={(e) => setMatricula(e.target.value)}
-              placeholder="Digite sua matrícula"
-            />
+            <div className="input-wrapper">
+              <User className="input-icon" size={18} />
+              <input
+                type="text"
+                id="matricula"
+                value={matricula}
+                onChange={(e) => setMatricula(e.target.value)}
+                placeholder="Digite sua matrícula"
+              />
+            </div>
           </div>
           <div className="input-group">
             <label htmlFor="senha">Senha</label>
-            <input
-              type="password"
-              id="senha"
-              value={senha}
-              onChange={(e) => setSenha(e.target.value)}
-              placeholder="Digite sua senha"
-            />
+            <div className="input-wrapper">
+              <Lock className="input-icon" size={18} />
+              <input
+                type="password"
+                id="senha"
+                value={senha}
+                onChange={(e) => setSenha(e.target.value)}
+                placeholder="Digite sua senha"
+              />
+            </div>
           </div>
           {erro && (
-            <div className="login-error-box" role="alert">
+            <div className="login-error-box slide-down" role="alert">
               <p>{erro}</p>
             </div>
           )}
-          <button type="submit" className="login-button" disabled={loading}>
-            {loading ? 'Carregando...' : 'Entrar'}
+          <button type="submit" className={`login-button ${loading ? 'loading' : ''}`} disabled={loading}>
+            {loading ? <Loader2 className="spinner" size={20} /> : 'Entrar'}
           </button>
         </form>
       </div>

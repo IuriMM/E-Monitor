@@ -4,12 +4,28 @@ import DuvidaModal from "../components/DuvidaModal"
 import { apiPost } from '../api/client'
 import './Duvidas.css'
 
-export default function Duvidas({ Usuario, Materias, ListaDuvidas = [], onNewData }) {
+export default function Duvidas({ Usuario, Materias, ListaDuvidas = [], TodosUsuarios = [], onNewData }) {
 
     const materiaMap = useMemo(
         () => Object.fromEntries(Object.values(Materias).map(m => [m.codigo, m])),
         [Materias]
     )
+
+    // Mapeia o "usuario" (id/matrícula gravado pela API a partir do JWT de
+    // quem criou a dúvida) para um nome de exibição, indexando por todas as
+    // chaves possíveis já que não sabemos ao certo qual identificador a API usa.
+    const usuarioMap = useMemo(() => {
+        const map = {}
+        TodosUsuarios.forEach(u => {
+            const nomeExibicao = `${u.nome ?? ''} ${u.sobrenome?.[0] ?? ''}.`.trim()
+            if (u._id) map[u._id] = nomeExibicao
+            if (u.id) map[u.id] = nomeExibicao
+            if (u.matricula) map[u.matricula] = nomeExibicao
+        })
+        return map
+    }, [TodosUsuarios])
+
+    const nomeAutor = (duvidaItem) => usuarioMap[duvidaItem?.usuario] || 'Usuário'
 
     const [FiltroMateria, setFiltroMateria] = useState('todas')
     const [FiltroStatus, setFiltroStatus] = useState('todas')
@@ -61,7 +77,7 @@ export default function Duvidas({ Usuario, Materias, ListaDuvidas = [], onNewDat
             </div>
 
             {showForm && (
-                <form className="form-nova-duvida glass-card" onSubmit={handleSubmit}>
+                <form className="form-nova-duvida" onSubmit={handleSubmit}>
                     <h3>Fazer uma Pergunta</h3>
                     <div className="form-group">
                         <select 
@@ -116,7 +132,7 @@ export default function Duvidas({ Usuario, Materias, ListaDuvidas = [], onNewDat
                     .map((duvidaItem) => (
                     <div key={duvidaItem._id || duvidaItem.id} className="duvida">
                         <CardDuvida
-                            NomeUsuario={Usuario.nome + ' ' + Usuario.sobrenome[0] + '.'}
+                            NomeUsuario={nomeAutor(duvidaItem)}
                             NomeMateria={materiaMap[duvidaItem.materia]?.nome || duvidaItem.materia}
                             horario={duvidaItem.horario}
                             duvida={duvidaItem.duvida}
@@ -130,7 +146,7 @@ export default function Duvidas({ Usuario, Materias, ListaDuvidas = [], onNewDat
             {selectedDuvida && (
                 <DuvidaModal
                     duvida={selectedDuvida}
-                    NomeUsuario={Usuario.nome + ' ' + Usuario.sobrenome[0] + '.'}
+                    NomeUsuario={nomeAutor(selectedDuvida)}
                     UsuarioAtual={Usuario}
                     onClose={() => setSelectedDuvida(null)}
                     onComentarioAdicionado={(updatedDuvida) => {

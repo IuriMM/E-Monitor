@@ -1,5 +1,6 @@
 import Agenda from "../components/Agenda"
 import './Inicio.css'
+import { Hand, MapPin, MessageSquare, BookOpen } from 'lucide-react'
 
 export default function Inicio({
     Usuario,
@@ -40,7 +41,9 @@ export default function Inicio({
         <div className="page inicio-page">
             <Agenda provas={Provas} materias={Materias} />
             <div className="notifications-container">
-                <h2 className="section-title">Olá, {Usuario.nome}! 👋</h2>
+                <h2 className="section-title" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    Olá, {Usuario.nome}! <Hand size={28} className="hand-wave-icon" />
+                </h2>
                 
                 <div className="dashboard-section">
                     <div className="dashboard-header">
@@ -53,7 +56,9 @@ export default function Inicio({
                                     <div className="timeline-time">{mon.horario}</div>
                                     <div className="timeline-content">
                                         <h4>{mon.materia}</h4>
-                                        <p>📍 {mon.sala}</p>
+                                        <p style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                            <MapPin size={14} /> {mon.sala}
+                                        </p>
                                     </div>
                                 </div>
                             ))}
@@ -68,7 +73,7 @@ export default function Inicio({
                 <div className="notifications-grid">
                     <div className="notification-card clickable" onClick={() => setScreen('chat')}>
                         <div className="notification-icon chat-icon">
-                            💬
+                            <MessageSquare size={24} color="#3b82f6" />
                         </div>
                         <div className="notification-content">
                             <h3>Mensagens</h3>
@@ -78,7 +83,7 @@ export default function Inicio({
 
                     <div className="notification-card clickable" onClick={() => setScreen('materiais')}>
                         <div className="notification-icon materiais-icon">
-                            📚
+                            <BookOpen size={24} color="#f59e0b" />
                         </div>
                         <div className="notification-content">
                             <h3>Materiais</h3>
