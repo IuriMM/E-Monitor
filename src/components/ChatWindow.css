@@ -1,7 +1,7 @@
 .chat-window {
     display: flex;
     flex-direction: column;
-    height: calc(100vh - 120px); /* Adjusting for possible headers/tabbars */
+    height: 100%;
     background-color: #f9fafb;
     border-radius: 12px;
     overflow: hidden;

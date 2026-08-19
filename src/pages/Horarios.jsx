@@ -26,7 +26,9 @@ export default function Horarios({Materias}){
             <div className="barra-dias">
                 {dias_da_semana.map(dia_da_semana => {
                     return(
-                        <p key={dia_da_semana} className={dia == dia_da_semana ? 'active' : ''} onClick={() => setDia(dia_da_semana)}>{dia_da_semana}</p>
+                        <button type="button" key={dia_da_semana} className={`btn-dia ${dia == dia_da_semana ? 'active' : ''}`} onClick={() => setDia(dia_da_semana)} aria-label={dia_da_semana}>
+                            {dia_da_semana}
+                        </button>
                     )
                 })}
             </div>

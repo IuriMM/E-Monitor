@@ -1,30 +1,30 @@
 import { useState, useEffect } from 'react';
 import ChatWindow from '../components/ChatWindow';
+import { apiGet } from '../api/client';
 import './Chat.css';
 
-export default function Chat({ Materias, Mensagens, Usuario, apiUrl, onNewData }) {
+export default function Chat({ Materias, Mensagens, Usuario, onNewData }) {
     const [filtroMateria, setFiltroMateria] = useState('todas');
     const [selectedMonitor, setSelectedMonitor] = useState(null);
     const [nomesMonitores, setNomesMonitores] = useState({});
 
     useEffect(() => {
+        const controller = new AbortController();
         const fetchUsuarios = async () => {
             try {
-                const res = await fetch(`${apiUrl}/usuarios/`);
-                if (res.ok) {
-                    const data = await res.json();
-                    const mapa = {};
-                    data.forEach(user => {
-                        mapa[user.matricula] = user.nome;
-                    });
-                    setNomesMonitores(mapa);
-                }
+                const data = await apiGet('/usuarios/', { signal: controller.signal });
+                const mapa = {};
+                data.forEach(user => {
+                    mapa[user.matricula] = user.nome;
+                });
+                setNomesMonitores(mapa);
             } catch (err) {
-                console.error("Erro ao buscar usuários para o chat:", err);
+                if (err.name !== 'AbortError') console.error("Erro ao buscar usuários para o chat:", err);
             }
         };
         fetchUsuarios();
-    }, [apiUrl]);
+        return () => controller.abort();
+    }, []);
 
     // Flatten monitors from all Materias
     const monitoresDisponiveis = [];
@@ -56,39 +56,44 @@ export default function Chat({ Materias, Mensagens, Usuario, apiUrl, onNewData }
                             onChange={(e) => setFiltroMateria(e.target.value)}
                         >
                             <option value="todas">Filtrar por matéria</option>
-                            {Object.values(Materias).map((materia, index) => {
+                            {Object.values(Materias).map((materia) => {
                                 const text = materia.nome;
                                 const shortText = text.length > 40 ? text.substring(0, 37) + '...' : text;
-                                return <option key={index} value={materia.nome} title={text}>{shortText}</option>;
+                                return <option key={materia.codigo} value={materia.nome} title={text}>{shortText}</option>;
                             })}
                         </select>
                     </div>
 
                     <div className="chat-contact-list">
-                        {monitoresFiltrados.map((monitor, index) => (
-                            <div 
-                                key={index} 
-                                className="chat-contact-card"
-                                onClick={() => setSelectedMonitor(monitor)}
-                            >
-                                <div className="contact-avatar">
-                                    {monitor.nome.charAt(0)}
+                        {monitoresFiltrados.length > 0 ? (
+                            monitoresFiltrados.map((monitor) => (
+                                <div
+                                    key={`${monitor.matricula}-${monitor.materiaNome}`}
+                                    className="chat-contact-card"
+                                    onClick={() => setSelectedMonitor(monitor)}
+                                >
+                                    <div className="contact-avatar">
+                                        {monitor.nome.charAt(0)}
+                                    </div>
+                                    <div className="contact-info">
+                                        <h3>{monitor.nome}</h3>
+                                        <p>{monitor.materiaNome}</p>
+                                    </div>
                                 </div>
-                                <div className="contact-info">
-                                    <h3>{monitor.nome}</h3>
-                                    <p>{monitor.materiaNome}</p>
-                                </div>
+                            ))
+                        ) : (
+                            <div className="empty-state" style={{ textAlign: 'center', padding: '40px 20px', color: '#666' }}>
+                                <p>Nenhum monitor encontrado para o filtro atual.</p>
                             </div>
-                        ))}
+                        )}
                     </div>
                 </>
             ) : (
-                <ChatWindow 
-                    monitor={selectedMonitor} 
+                <ChatWindow
+                    monitor={selectedMonitor}
                     mensagensIniciais={Mensagens[selectedMonitor.nome] || []}
                     usuarioAtual={Usuario}
                     onBack={() => setSelectedMonitor(null)}
-                    apiUrl={apiUrl}
                     onNewData={onNewData}
                 />
             )}

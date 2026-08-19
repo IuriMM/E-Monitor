@@ -1,14 +1,20 @@
-import React, { useState } from 'react';
+import { useState, useMemo } from 'react';
 import CardMaterial from '../components/CardMaterial';
 import ModalNovoMaterial from '../components/ModalNovoMaterial';
+import { apiPost } from '../api/client';
 import './Materiais.css';
 
-export default function Materiais({ Materias, MateriaisEstudoIniciais, Usuario, apiUrl, onNewData }) {
+export default function Materiais({ Materias, MateriaisEstudoIniciais, Usuario, onNewData }) {
     const [filtroMateria, setFiltroMateria] = useState('todas');
     const [showModal, setShowModal] = useState(false);
-    
+
     // We keep materials in state to allow adding new ones without a backend
     const [materiaisList, setMateriaisList] = useState(MateriaisEstudoIniciais);
+
+    const materiaMap = useMemo(
+        () => Object.fromEntries(Object.values(Materias).map(m => [m.codigo, m])),
+        [Materias]
+    )
 
     const materiaisFiltrados = materiaisList.filter(
         mat => filtroMateria === 'todas' || mat.materia === filtroMateria
@@ -25,22 +31,12 @@ export default function Materiais({ Materias, MateriaisEstudoIniciais, Usuario, 
         };
 
         try {
-            const res = await fetch(`${apiUrl}/materiais_estudo/`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(materialParaSalvar)
-            });
-
-            if (res.ok) {
-                const createdMaterial = await res.json();
-                setMateriaisList([createdMaterial, ...materiaisList]);
-                setShowModal(false);
-                if (onNewData) onNewData('Material', createdMaterial);
-            } else {
-                alert('Falha ao publicar material.');
-            }
+            const createdMaterial = await apiPost('/materiais_estudo/', materialParaSalvar);
+            setMateriaisList([createdMaterial, ...materiaisList]);
+            setShowModal(false);
+            if (onNewData) onNewData('Material', createdMaterial);
         } catch (err) {
-            alert('Erro de conexão ao publicar material.');
+            alert(`Falha ao publicar material: ${err.message}`);
         }
     };
 
@@ -68,9 +64,9 @@ export default function Materiais({ Materias, MateriaisEstudoIniciais, Usuario, 
 
             <div className="materiais-list">
                 {materiaisFiltrados.length > 0 ? (
-                    materiaisFiltrados.map(material => {
-                        const nomeMateria = Object.values(Materias).find(m => m.codigo === material.materia)?.nome || material.materia;
-                        return <CardMaterial key={material.id || material._id || Math.random()} material={material} NomeMateria={nomeMateria} />
+                    materiaisFiltrados.map((material, index) => {
+                        const nomeMateria = materiaMap[material.materia]?.nome || material.materia;
+                        return <CardMaterial key={material.id || material._id || index} material={material} NomeMateria={nomeMateria} />
                     })
                 ) : (
                     <p style={{ textAlign: 'center', color: '#666', marginTop: '20px' }}>

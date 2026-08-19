@@ -13,11 +13,21 @@ export default function TabBar({screen, setScreen}) {
 
     return (
         <div className="tab-bar">
-            <img className={screen === 'inicio' ? 'ativo' : ''} src={Casa} alt="Casa" onClick={() => handleScreenChange('inicio')}/>
-            <img className={screen === 'duvidas' ? 'ativo' : ''} src={Carta} alt="Carta" onClick={() => handleScreenChange('duvidas')}/>
-            <img className={screen === 'chat' ? 'ativo' : ''} src={Mensagem} alt="Mensagem" onClick={() => handleScreenChange('chat')}/>
-            <img className={screen === 'horarios' ? 'ativo' : ''} src={Relogio} alt="Relogio" onClick={() => handleScreenChange('horarios')}/>
-            <img className={screen === 'materiais' ? 'ativo' : ''} src={Caderno} alt="Caderno" onClick={() => handleScreenChange('materiais')}/>
+            <button type="button" className={`tab-btn ${screen === 'inicio' ? 'ativo' : ''}`} onClick={() => handleScreenChange('inicio')} aria-label="Início">
+                <img src={Casa} alt="Casa" />
+            </button>
+            <button type="button" className={`tab-btn ${screen === 'duvidas' ? 'ativo' : ''}`} onClick={() => handleScreenChange('duvidas')} aria-label="Dúvidas">
+                <img src={Carta} alt="Carta" />
+            </button>
+            <button type="button" className={`tab-btn ${screen === 'chat' ? 'ativo' : ''}`} onClick={() => handleScreenChange('chat')} aria-label="Chat">
+                <img src={Mensagem} alt="Mensagem" />
+            </button>
+            <button type="button" className={`tab-btn ${screen === 'horarios' ? 'ativo' : ''}`} onClick={() => handleScreenChange('horarios')} aria-label="Horários">
+                <img src={Relogio} alt="Relógio" />
+            </button>
+            <button type="button" className={`tab-btn ${screen === 'materiais' ? 'ativo' : ''}`} onClick={() => handleScreenChange('materiais')} aria-label="Materiais">
+                <img src={Caderno} alt="Caderno" />
+            </button>
         </div>
     )
 }

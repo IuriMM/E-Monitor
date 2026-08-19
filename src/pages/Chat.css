@@ -2,7 +2,7 @@
     display: flex;
     flex-direction: column;
     padding: 20px;
-    height: 100vh;
+    height: calc(100dvh - 70px); /* 100dvh minus header */
     box-sizing: border-box;
 }
 

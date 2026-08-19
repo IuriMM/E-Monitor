@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import './Login.css';
 import logoImg from '../assets/logo.png';
+import { apiPost } from '../api/client';
 
-export default function Login({ onLogin, apiUrl }) {
+export default function Login({ onLogin, sessionExpired }) {
   const [matricula, setMatricula] = useState('');
   const [senha, setSenha] = useState('');
   const [erro, setErro] = useState('');
@@ -19,26 +20,17 @@ export default function Login({ onLogin, apiUrl }) {
 
     try {
       setLoading(true);
-      const res = await fetch(`${apiUrl}/usuarios/login`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ matricula, senha })
-      });
-
-      if (!res.ok) {
-        if (res.status === 401) {
-          throw new Error('Matrícula ou senha incorretos');
-        } else {
-          throw new Error('Erro ao conectar com o servidor');
-        }
+      const response = await apiPost('/usuarios/login', { matricula, senha });
+      if (!response?.access_token || !response?.usuario) {
+        throw new Error('Resposta inesperada do servidor.');
       }
-
-      const userData = await res.json();
-      onLogin(userData);
+      onLogin(response);
     } catch (err) {
-      setErro(err.message);
+      if (err.status === 401) {
+        setErro('Matrícula ou senha incorretos');
+      } else {
+        setErro('Erro ao conectar com o servidor');
+      }
     } finally {
       setLoading(false);
     }
@@ -51,6 +43,7 @@ export default function Login({ onLogin, apiUrl }) {
           <img src={logoImg} className="Logo" alt="eMonitor Logo" />
         </div>
         <h2>Entrar no eMonitor</h2>
+        {sessionExpired && <p className="login-error">Sua sessão expirou. Entre novamente.</p>}
         <form onSubmit={handleSubmit} className="login-form">
           <div className="input-group">
             <label htmlFor="matricula">Matrícula</label>
@@ -72,7 +65,11 @@ export default function Login({ onLogin, apiUrl }) {
               placeholder="Digite sua senha"
             />
           </div>
-          {erro && <p className="login-error">{erro}</p>}
+          {erro && (
+            <div className="login-error-box" role="alert">
+              <p>{erro}</p>
+            </div>
+          )}
           <button type="submit" className="login-button" disabled={loading}>
             {loading ? 'Carregando...' : 'Entrar'}
           </button>

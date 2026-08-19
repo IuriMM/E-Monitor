@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import './ModalNovoMaterial.css';
 
 export default function ModalNovoMaterial({ Materias, onSave, onClose }) {
@@ -33,8 +33,8 @@ export default function ModalNovoMaterial({ Materias, onSave, onClose }) {
                     <div className="form-group">
                         <label>Matéria</label>
                         <select required value={materia} onChange={e => setMateria(e.target.value)}>
-                            {Object.values(Materias).map((m, index) => (
-                                <option key={index} value={m.codigo}>{m.nome}</option>
+                            {Object.values(Materias).map((m) => (
+                                <option key={m.codigo} value={m.codigo}>{m.nome}</option>
                             ))}
                         </select>
                     </div>

@@ -1,4 +1,3 @@
-import React from 'react';
 import './Perfil.css';
 
 export default function Perfil({ Usuario, Materias, onLogout }) {

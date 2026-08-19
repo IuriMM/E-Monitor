@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import { apiPut } from '../api/client';
 import './DuvidaModal.css';
 
-export default function DuvidaModal({ duvida, NomeUsuario, UsuarioAtual, apiUrl, onClose, onComentarioAdicionado }) {
+export default function DuvidaModal({ duvida, NomeUsuario, UsuarioAtual, onClose, onComentarioAdicionado }) {
     const [novoComentario, setNovoComentario] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -34,23 +35,13 @@ export default function DuvidaModal({ duvida, NomeUsuario, UsuarioAtual, apiUrl,
         const duvidaId = duvida._id || duvida.id;
 
         try {
-            const res = await fetch(`${apiUrl}/duvidas/${duvidaId}`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(updatedDuvida)
-            });
-
-            if (res.ok) {
-                const returnedDuvida = await res.json();
-                setNovoComentario('');
-                if (onComentarioAdicionado) {
-                    onComentarioAdicionado(returnedDuvida);
-                }
-            } else {
-                alert('Falha ao enviar comentário.');
+            const returnedDuvida = await apiPut(`/duvidas/${duvidaId}`, updatedDuvida);
+            setNovoComentario('');
+            if (onComentarioAdicionado) {
+                onComentarioAdicionado(returnedDuvida);
             }
         } catch (error) {
-            alert('Erro de conexão ao enviar comentário.');
+            alert(`Falha ao enviar comentário: ${error.message}`);
         } finally {
             setIsSubmitting(false);
         }

@@ -1,6 +1,6 @@
 .page {
   animation: fadeSlideUp 0.3s ease-out forwards;
-  margin-bottom: 75px;
+  padding-bottom: 90px; /* Space for TabBar */
 }
 
 @keyframes fadeSlideUp {

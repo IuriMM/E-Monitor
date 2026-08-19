@@ -1,24 +1,25 @@
-import { useState, useEffect } from "react"
+import { useState, useMemo } from "react"
 import CardDuvida from "../components/CardDuvida"
 import DuvidaModal from "../components/DuvidaModal"
+import { apiPost } from '../api/client'
 import './Duvidas.css'
 
-export default function Duvidas({ Usuario, Materias, ListaDuvidas = [], apiUrl, onNewData }) {
+export default function Duvidas({ Usuario, Materias, ListaDuvidas = [], onNewData }) {
+
+    const materiaMap = useMemo(
+        () => Object.fromEntries(Object.values(Materias).map(m => [m.codigo, m])),
+        [Materias]
+    )
 
     const [FiltroMateria, setFiltroMateria] = useState('todas')
     const [FiltroStatus, setFiltroStatus] = useState('todas')
     const [selectedDuvida, setSelectedDuvida] = useState(null)
-    
+
     // Estados para nova dúvida
-    const [localDuvidas, setLocalDuvidas] = useState(ListaDuvidas)
     const [novaDuvida, setNovaDuvida] = useState('')
     const [materiaDuvida, setMateriaDuvida] = useState('')
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [showForm, setShowForm] = useState(false)
-
-    useEffect(() => {
-        setLocalDuvidas(ListaDuvidas)
-    }, [ListaDuvidas])
 
     const handleSubmit = async (e) => {
         e.preventDefault()
@@ -29,33 +30,23 @@ export default function Duvidas({ Usuario, Materias, ListaDuvidas = [], apiUrl, 
         const now = new Date();
         const dataStr = now.toISOString().split('T')[0] + ' ' + now.toTimeString().substring(0, 5);
         
+        // "usuario" não é enviado: a API define o autor a partir do token JWT.
         const newDuvidaObj = {
             materia: materiaDuvida,
             horario: dataStr,
             duvida: novaDuvida,
             status: 'Pendente',
-            usuario: Usuario._id || Usuario.id,
             comentarios: []
         }
         
         try {
-            const res = await fetch(`${apiUrl}/duvidas/`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(newDuvidaObj)
-            })
-            if (res.ok) {
-                const created = await res.json();
-                setLocalDuvidas([created, ...localDuvidas]);
-                setNovaDuvida('');
-                setMateriaDuvida('');
-                setShowForm(false);
-                if (onNewData) onNewData('Duvida', created);
-            } else {
-                alert('Falha ao enviar dúvida.')
-            }
+            const created = await apiPost('/duvidas/', newDuvidaObj)
+            setNovaDuvida('');
+            setMateriaDuvida('');
+            setShowForm(false);
+            if (onNewData) onNewData('Duvida', created);
         } catch (err) {
-            alert('Erro de conexão.')
+            alert(`Falha ao enviar dúvida: ${err.message}`)
         } finally {
             setIsSubmitting(false)
         }
@@ -79,15 +70,15 @@ export default function Duvidas({ Usuario, Materias, ListaDuvidas = [], apiUrl, 
                             required
                         >
                             <option value="">Selecione a matéria</option>
-                            {Object.values(Materias).map((materia, index) => {
+                            {Object.values(Materias).map((materia) => {
                                 const text = `${materia.codigo} - ${materia.nome}`;
                                 const shortText = text.length > 40 ? text.substring(0, 37) + '...' : text;
-                                return <option key={index} value={materia.codigo} title={text}>{shortText}</option>;
+                                return <option key={materia.codigo} value={materia.codigo} title={text}>{shortText}</option>;
                             })}
                         </select>
                     </div>
                     <div className="form-group">
-                        <textarea 
+                        <textarea
                             placeholder="Escreva sua dúvida aqui..." 
                             value={novaDuvida}
                             onChange={(e) => setNovaDuvida(e.target.value)}
@@ -104,10 +95,10 @@ export default function Duvidas({ Usuario, Materias, ListaDuvidas = [], apiUrl, 
             <div className="filtros-container">
                 <select className="select-filtro" name="filtro-materia" id="filtro-materia" onChange={(e) => setFiltroMateria(e.target.value)}>
                     <option value="todas">Filtrar por matéria</option>
-                    {Object.values(Materias).map((materia, index) => {
+                    {Object.values(Materias).map((materia) => {
                         const text = `${materia.codigo} - ${materia.nome}`;
                         const shortText = text.length > 40 ? text.substring(0, 37) + '...' : text;
-                        return <option key={index} value={materia.codigo} title={text}>{shortText}</option>;
+                        return <option key={materia.codigo} value={materia.codigo} title={text}>{shortText}</option>;
                     })}
                 </select>
                 <select className="select-filtro" name="filtro-status" id="filtro-status" onChange={(e) => setFiltroStatus(e.target.value)}>
@@ -119,14 +110,14 @@ export default function Duvidas({ Usuario, Materias, ListaDuvidas = [], apiUrl, 
             </div>
 
             <div className="duvidas-list">
-                {localDuvidas
+                {ListaDuvidas
                     .filter((duvidaItem) => FiltroMateria === 'todas' || duvidaItem.materia === FiltroMateria)
                     .filter((duvidaItem) => FiltroStatus === 'todas' || (duvidaItem.status && duvidaItem.status.toLowerCase() === FiltroStatus.toLowerCase()) || (!duvidaItem.status && FiltroStatus.toLowerCase() === 'pendente'))
-                    .map((duvidaItem, index) => (
-                    <div key={index} className="duvida">
+                    .map((duvidaItem) => (
+                    <div key={duvidaItem._id || duvidaItem.id} className="duvida">
                         <CardDuvida
                             NomeUsuario={Usuario.nome + ' ' + Usuario.sobrenome[0] + '.'}
-                            NomeMateria={Object.values(Materias).find(m => m.codigo === duvidaItem.materia)?.nome || duvidaItem.materia}
+                            NomeMateria={materiaMap[duvidaItem.materia]?.nome || duvidaItem.materia}
                             horario={duvidaItem.horario}
                             duvida={duvidaItem.duvida}
                             StatusDuvida={duvidaItem.status || 'Pendente'}
@@ -137,15 +128,13 @@ export default function Duvidas({ Usuario, Materias, ListaDuvidas = [], apiUrl, 
             </div>
 
             {selectedDuvida && (
-                <DuvidaModal 
-                    duvida={selectedDuvida} 
+                <DuvidaModal
+                    duvida={selectedDuvida}
                     NomeUsuario={Usuario.nome + ' ' + Usuario.sobrenome[0] + '.'}
                     UsuarioAtual={Usuario}
-                    apiUrl={apiUrl}
-                    onClose={() => setSelectedDuvida(null)} 
+                    onClose={() => setSelectedDuvida(null)}
                     onComentarioAdicionado={(updatedDuvida) => {
-                        const newDuvidas = localDuvidas.map(d => (d._id || d.id) === (updatedDuvida._id || updatedDuvida.id) ? updatedDuvida : d);
-                        setLocalDuvidas(newDuvidas);
+                        if (onNewData) onNewData('DuvidaAtualizada', updatedDuvida);
                         setSelectedDuvida(updatedDuvida);
                     }}
                 />

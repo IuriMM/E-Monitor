@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import './Cadastro.css';
+import { apiGet, apiPost } from '../api/client';
 
 // --- Subcomponents for Forms ---
 
-function FormUsuario({ apiUrl, materias }) {
+function FormUsuario({ materias }) {
   const [formData, setFormData] = useState({
     nome: '', sobrenome: '', curso: '', matricula: '', senha: '', materias: [], monitor: []
   });
@@ -33,20 +34,11 @@ function FormUsuario({ apiUrl, materias }) {
     e.preventDefault();
     setMsg({ text: 'Salvando...', type: 'info' });
     try {
-      const res = await fetch(`${apiUrl}/usuarios/`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
-      });
-      if (res.ok) {
-        setMsg({ text: 'Usuário cadastrado com sucesso!', type: 'success' });
-        setFormData({ nome: '', sobrenome: '', curso: '', matricula: '', senha: '', materias: [], monitor: [] });
-      } else {
-        const error = await res.json();
-        setMsg({ text: `Erro: ${error.detail || 'Falha ao cadastrar'}`, type: 'error' });
-      }
+      await apiPost('/usuarios/', formData);
+      setMsg({ text: 'Usuário cadastrado com sucesso!', type: 'success' });
+      setFormData({ nome: '', sobrenome: '', curso: '', matricula: '', senha: '', materias: [], monitor: [] });
     } catch (err) {
-      setMsg({ text: `Erro de conexão: ${err.message}`, type: 'error' });
+      setMsg({ text: `Erro: ${err.message}`, type: 'error' });
     }
   };
 
@@ -117,7 +109,7 @@ function FormUsuario({ apiUrl, materias }) {
   );
 }
 
-function FormMateria({ apiUrl, onMateriaAdded }) {
+function FormMateria({ onMateriaAdded }) {
   const [formData, setFormData] = useState({ codigo: '', nome: '', monitoresStr: '' });
   const [msg, setMsg] = useState({ text: '', type: '' });
 
@@ -133,26 +125,17 @@ function FormMateria({ apiUrl, onMateriaAdded }) {
       : [];
 
     try {
-      const res = await fetch(`${apiUrl}/materias/`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          codigo: formData.codigo, 
-          nome: formData.nome, 
-          monitores: monitores, 
-          cronograma: [] 
-        })
+      await apiPost('/materias/', {
+        codigo: formData.codigo,
+        nome: formData.nome,
+        monitores: monitores,
+        cronograma: []
       });
-      if (res.ok) {
-        setMsg({ text: 'Matéria cadastrada com sucesso!', type: 'success' });
-        setFormData({ codigo: '', nome: '', monitoresStr: '' });
-        onMateriaAdded();
-      } else {
-        const error = await res.json();
-        setMsg({ text: `Erro: ${error.detail || 'Falha ao cadastrar'}`, type: 'error' });
-      }
+      setMsg({ text: 'Matéria cadastrada com sucesso!', type: 'success' });
+      setFormData({ codigo: '', nome: '', monitoresStr: '' });
+      onMateriaAdded();
     } catch (err) {
-      setMsg({ text: `Erro de conexão: ${err.message}`, type: 'error' });
+      setMsg({ text: `Erro: ${err.message}`, type: 'error' });
     }
   };
 
@@ -177,7 +160,7 @@ function FormMateria({ apiUrl, onMateriaAdded }) {
   );
 }
 
-function FormProva({ apiUrl, materias }) {
+function FormProva({ materias }) {
   const [formData, setFormData] = useState({ nome: '', dia: '', horario: '', materia: '' });
   const [msg, setMsg] = useState({ text: '', type: '' });
 
@@ -187,20 +170,11 @@ function FormProva({ apiUrl, materias }) {
     e.preventDefault();
     setMsg({ text: 'Salvando...', type: 'info' });
     try {
-      const res = await fetch(`${apiUrl}/provas/`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
-      });
-      if (res.ok) {
-        setMsg({ text: 'Prova cadastrada com sucesso!', type: 'success' });
-        setFormData({ nome: '', dia: '', horario: '', materia: '' });
-      } else {
-        const error = await res.json();
-        setMsg({ text: `Erro: ${error.detail || 'Falha ao cadastrar'}`, type: 'error' });
-      }
+      await apiPost('/provas/', formData);
+      setMsg({ text: 'Prova cadastrada com sucesso!', type: 'success' });
+      setFormData({ nome: '', dia: '', horario: '', materia: '' });
     } catch (err) {
-      setMsg({ text: `Erro de conexão: ${err.message}`, type: 'error' });
+      setMsg({ text: `Erro: ${err.message}`, type: 'error' });
     }
   };
 
@@ -236,7 +210,7 @@ function FormProva({ apiUrl, materias }) {
   );
 }
 
-function FormDuvida({ apiUrl, materias }) {
+function FormDuvida({ materias }) {
   const [formData, setFormData] = useState({ materia: '', horario: '', duvida: '', status: 'Aberta' });
   const [msg, setMsg] = useState({ text: '', type: '' });
 
@@ -246,20 +220,11 @@ function FormDuvida({ apiUrl, materias }) {
     e.preventDefault();
     setMsg({ text: 'Salvando...', type: 'info' });
     try {
-      const res = await fetch(`${apiUrl}/duvidas/`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({...formData, comentarios: []})
-      });
-      if (res.ok) {
-        setMsg({ text: 'Dúvida cadastrada com sucesso!', type: 'success' });
-        setFormData({ materia: '', horario: '', duvida: '', status: 'Aberta' });
-      } else {
-        const error = await res.json();
-        setMsg({ text: `Erro: ${error.detail || 'Falha ao cadastrar'}`, type: 'error' });
-      }
+      await apiPost('/duvidas/', { ...formData, comentarios: [] });
+      setMsg({ text: 'Dúvida cadastrada com sucesso!', type: 'success' });
+      setFormData({ materia: '', horario: '', duvida: '', status: 'Aberta' });
     } catch (err) {
-      setMsg({ text: `Erro de conexão: ${err.message}`, type: 'error' });
+      setMsg({ text: `Erro: ${err.message}`, type: 'error' });
     }
   };
 
@@ -298,7 +263,7 @@ function FormDuvida({ apiUrl, materias }) {
   );
 }
 
-function FormMaterial({ apiUrl, materias }) {
+function FormMaterial({ materias }) {
   const [formData, setFormData] = useState({ materia: '', autor: '', titulo: '', comentario: '', link: '', data: '' });
   const [msg, setMsg] = useState({ text: '', type: '' });
 
@@ -308,20 +273,11 @@ function FormMaterial({ apiUrl, materias }) {
     e.preventDefault();
     setMsg({ text: 'Salvando...', type: 'info' });
     try {
-      const res = await fetch(`${apiUrl}/materiais_estudo/`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
-      });
-      if (res.ok) {
-        setMsg({ text: 'Material cadastrado com sucesso!', type: 'success' });
-        setFormData({ materia: '', autor: '', titulo: '', comentario: '', link: '', data: '' });
-      } else {
-        const error = await res.json();
-        setMsg({ text: `Erro: ${error.detail || 'Falha ao cadastrar'}`, type: 'error' });
-      }
+      await apiPost('/materiais_estudo/', formData);
+      setMsg({ text: 'Material cadastrado com sucesso!', type: 'success' });
+      setFormData({ materia: '', autor: '', titulo: '', comentario: '', link: '', data: '' });
     } catch (err) {
-      setMsg({ text: `Erro de conexão: ${err.message}`, type: 'error' });
+      setMsg({ text: `Erro: ${err.message}`, type: 'error' });
     }
   };
 
@@ -367,18 +323,15 @@ function FormMaterial({ apiUrl, materias }) {
 
 // --- Main Page ---
 
-export default function Cadastro({ apiUrl }) {
+export default function Cadastro() {
   const [activeTab, setActiveTab] = useState('usuario');
   const [materias, setMaterias] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const fetchMaterias = async () => {
     try {
-      const res = await fetch(`${apiUrl}/materias/`);
-      if (res.ok) {
-        const data = await res.json();
-        setMaterias(data);
-      }
+      const data = await apiGet('/materias/');
+      setMaterias(data);
     } catch (err) {
       console.error("Erro ao buscar materias", err);
     } finally {
@@ -387,8 +340,11 @@ export default function Cadastro({ apiUrl }) {
   };
 
   useEffect(() => {
+    // fetchMaterias só faz setState depois do await (nunca de forma síncrona);
+    // é reaproveitada aqui e como callback de recarregar após criar matéria.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchMaterias();
-  }, [apiUrl]);
+  }, []);
 
   return (
     <div className="page cadastro-container">
@@ -410,11 +366,11 @@ export default function Cadastro({ apiUrl }) {
              <p className="loading-text">Carregando dependências do sistema...</p>
           ) : (
              <>
-               {activeTab === 'usuario' && <FormUsuario apiUrl={apiUrl} materias={materias} />}
-               {activeTab === 'materia' && <FormMateria apiUrl={apiUrl} onMateriaAdded={fetchMaterias} />}
-               {activeTab === 'prova' && <FormProva apiUrl={apiUrl} materias={materias} />}
-               {activeTab === 'duvida' && <FormDuvida apiUrl={apiUrl} materias={materias} />}
-               {activeTab === 'material' && <FormMaterial apiUrl={apiUrl} materias={materias} />}
+               {activeTab === 'usuario' && <FormUsuario materias={materias} />}
+               {activeTab === 'materia' && <FormMateria onMateriaAdded={fetchMaterias} />}
+               {activeTab === 'prova' && <FormProva materias={materias} />}
+               {activeTab === 'duvida' && <FormDuvida materias={materias} />}
+               {activeTab === 'material' && <FormMaterial materias={materias} />}
              </>
           )}
        </div>

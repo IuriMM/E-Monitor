@@ -22,9 +22,9 @@ export default function Header({ screen, setScreen, Usuario }) {
                         ⚙️
                     </button>
                 )}
-                <div className="Usuario" onClick={() => setScreen('perfil')} title="Ver Perfil">
+                <button type="button" className="Usuario" onClick={() => setScreen('perfil')} title="Ver Perfil" aria-label="Ver Perfil">
                     {Usuario.fotoPerfil ? <img src="./Perfil.svg" alt="Perfil" /> : <p>{Usuario.nome[0] + Usuario.sobrenome[0]}</p>}
-                </div>
+                </button>
             </div>
         </header>
     )

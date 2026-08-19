@@ -1,9 +1,11 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { apiPost } from '../api/client';
 import './ChatWindow.css';
 
-export default function ChatWindow({ monitor, mensagensIniciais, usuarioAtual, onBack, apiUrl, onNewData }) {
+export default function ChatWindow({ monitor, mensagensIniciais, usuarioAtual, onBack, onNewData }) {
     const [mensagens, setMensagens] = useState(mensagensIniciais);
     const [novaMensagem, setNovaMensagem] = useState('');
+    const [isSending, setIsSending] = useState(false);
     const messagesEndRef = useRef(null);
 
     const scrollToBottom = () => {
@@ -12,39 +14,35 @@ export default function ChatWindow({ monitor, mensagensIniciais, usuarioAtual, o
 
     useEffect(() => {
         scrollToBottom();
-    }, [mensagens]);
+    }, [mensagens, isSending]);
 
     const handleSend = async (e) => {
         e.preventDefault();
-        if (!novaMensagem.trim()) return;
+        if (!novaMensagem.trim() || isSending) return;
 
         const date = new Date();
         const horarioStr = `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
 
+        const msgTexto = novaMensagem.trim();
         const msg = {
             destinatario: monitor.nome,
             remetente: usuarioAtual.nome,
-            texto: novaMensagem.trim(),
+            texto: msgTexto,
             horario: horarioStr
         };
 
-        try {
-            const res = await fetch(`${apiUrl}/mensagens/`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(msg)
-            });
+        setNovaMensagem('');
+        setIsSending(true);
 
-            if (res.ok) {
-                const createdMsg = await res.json();
-                setMensagens([...mensagens, createdMsg]);
-                setNovaMensagem('');
-                if (onNewData) onNewData('Mensagem', createdMsg);
-            } else {
-                alert('Falha ao enviar mensagem.');
-            }
+        try {
+            const createdMsg = await apiPost('/mensagens/', msg);
+            setMensagens([...mensagens, createdMsg]);
+            if (onNewData) onNewData('Mensagem', createdMsg);
         } catch (err) {
-            alert('Erro de conexão ao enviar mensagem.');
+            alert(`Falha ao enviar mensagem: ${err.message}`);
+            setNovaMensagem(msgTexto); // restore text on failure
+        } finally {
+            setIsSending(false);
         }
     };
 
@@ -64,12 +62,17 @@ export default function ChatWindow({ monitor, mensagensIniciais, usuarioAtual, o
                 {mensagens.map((msg, index) => {
                     const isSentByMe = msg.remetente === usuarioAtual.nome;
                     return (
-                        <div key={index} className={`message ${isSentByMe ? 'sent' : 'received'}`}>
+                        <div key={msg._id || msg.id || index} className={`message ${isSentByMe ? 'sent' : 'received'}`}>
                             {msg.texto}
                             <span className="message-time">{msg.horario}</span>
                         </div>
                     );
                 })}
+                {isSending && (
+                    <div className="message sent" style={{ opacity: 0.6 }}>
+                        <span className="sending-indicator">Enviando...</span>
+                    </div>
+                )}
                 <div ref={messagesEndRef} />
             </div>
 
@@ -79,8 +82,9 @@ export default function ChatWindow({ monitor, mensagensIniciais, usuarioAtual, o
                     placeholder="Digite sua mensagem..." 
                     value={novaMensagem}
                     onChange={(e) => setNovaMensagem(e.target.value)}
+                    disabled={isSending}
                 />
-                <button type="submit" className="send-btn" disabled={!novaMensagem.trim()}>
+                <button type="submit" className="send-btn" disabled={!novaMensagem.trim() || isSending}>
                     ➤
                 </button>
             </form>

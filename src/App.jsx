@@ -1,17 +1,17 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, lazy, Suspense } from 'react'
 import './App.css'
 import TabBar from './components/TabBar'
-import Inicio from './pages/Inicio'
-import Horarios from './pages/Horarios'
-import Duvidas from './pages/Duvidas'
-import Materiais from './pages/Materiais'
-import Chat from './pages/Chat'
 import Header from './components/Header'
 import Login from './pages/Login'
-import Cadastro from './pages/Cadastro'
-import Perfil from './pages/Perfil'
+import { apiGet, setAuthToken, clearAuthToken, setUnauthorizedHandler } from './api/client'
 
-const API_BASE_URL = 'https://e-monitorwebapi.onrender.com/api';
+const Inicio = lazy(() => import('./pages/Inicio'))
+const Horarios = lazy(() => import('./pages/Horarios'))
+const Duvidas = lazy(() => import('./pages/Duvidas'))
+const Materiais = lazy(() => import('./pages/Materiais'))
+const Chat = lazy(() => import('./pages/Chat'))
+const Cadastro = lazy(() => import('./pages/Cadastro'))
+const Perfil = lazy(() => import('./pages/Perfil'))
 
 function App() {
   const [screen, setScreen] = useState('inicio')
@@ -27,33 +27,37 @@ function App() {
   });
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [sessionExpired, setSessionExpired] = useState(false);
+
+  const handleLogin = ({ access_token, usuario } = {}) => {
+    if (access_token) setAuthToken(access_token);
+    const safeUser = { ...(usuario || {}) };
+    delete safeUser.senha;
+    setSessionExpired(false);
+    setUsuarioLogado(safeUser);
+  };
+
+  const handleLogout = ({ expired = false } = {}) => {
+    clearAuthToken();
+    setUsuarioLogado(null);
+    setScreen('inicio');
+    setSessionExpired(expired);
+  };
+
+  useEffect(() => {
+    setUnauthorizedHandler(() => handleLogout({ expired: true }));
+  }, []);
 
   useEffect(() => {
     if (!usuarioLogado) return;
 
+    const controller = new AbortController();
+
     const fetchData = async () => {
       try {
         setIsLoading(true);
-        
+
         // Dispara requisições simultâneas (não precisamos buscar usuarios pois já temos o logado)
-        const [
-          resMaterias,
-          resProvas,
-          resDuvidas,
-          resMensagens,
-          resMateriais
-        ] = await Promise.all([
-          fetch(`${API_BASE_URL}/materias/`),
-          fetch(`${API_BASE_URL}/provas/`),
-          fetch(`${API_BASE_URL}/duvidas/`),
-          fetch(`${API_BASE_URL}/mensagens/`),
-          fetch(`${API_BASE_URL}/materiais_estudo/`)
-        ]);
-
-        if (!resMaterias.ok || !resProvas.ok || !resDuvidas.ok || !resMensagens.ok || !resMateriais.ok) {
-          throw new Error('Falha ao obter os dados da API.');
-        }
-
         const [
           materiasList,
           provasList,
@@ -61,11 +65,11 @@ function App() {
           mensagensList,
           materiaisList
         ] = await Promise.all([
-          resMaterias.json(),
-          resProvas.json(),
-          resDuvidas.json(),
-          resMensagens.json(),
-          resMateriais.json()
+          apiGet('/materias/', { signal: controller.signal }),
+          apiGet('/provas/', { signal: controller.signal }),
+          apiGet('/duvidas/', { signal: controller.signal }),
+          apiGet('/mensagens/', { signal: controller.signal }),
+          apiGet('/materiais_estudo/', { signal: controller.signal })
         ]);
 
         const materiasUsuario = usuarioLogado.materias || [];
@@ -87,16 +91,14 @@ function App() {
         const duvidasFiltradas = duvidasList.filter(d => todasAsMaterias.includes(d.materia));
         const materiaisFiltrados = materiaisList.filter(m => todasAsMaterias.includes(m.materia));
 
-        // Formata Mensagens (Filtra apenas as enviadas/recebidas pelo usuário atual)
+        // GET /mensagens/ já vem restrito às conversas do usuário autenticado (server-side).
         const formatMensagens = {};
         mensagensList.forEach(msg => {
-          if (msg.remetente === nomeUsuario || msg.destinatario === nomeUsuario) {
-            const interlocutor = msg.remetente !== nomeUsuario ? msg.remetente : msg.destinatario;
-            if (!formatMensagens[interlocutor]) {
-              formatMensagens[interlocutor] = [];
-            }
-            formatMensagens[interlocutor].push(msg);
+          const interlocutor = msg.remetente !== nomeUsuario ? msg.remetente : msg.destinatario;
+          if (!formatMensagens[interlocutor]) {
+            formatMensagens[interlocutor] = [];
           }
+          formatMensagens[interlocutor].push(msg);
         });
 
         setData({
@@ -109,18 +111,21 @@ function App() {
         });
 
       } catch (err) {
+        if (err.name === 'AbortError') return;
         console.error(err);
         setError(err.message);
       } finally {
-        setIsLoading(false);
+        if (!controller.signal.aborted) setIsLoading(false);
       }
     };
 
     fetchData();
+
+    return () => controller.abort();
   }, [usuarioLogado]);
 
   if (!usuarioLogado) {
-    return <Login onLogin={setUsuarioLogado} apiUrl={API_BASE_URL} />;
+    return <Login onLogin={handleLogin} sessionExpired={sessionExpired} />;
   }
 
   if (isLoading) {
@@ -130,11 +135,6 @@ function App() {
   if (error) {
     return <div className="error-screen" style={{ padding: '20px', textAlign: 'center', color: 'red' }}><p>Erro ao conectar com API: {error}</p></div>;
   }
-
-  const handleLogout = () => {
-    setUsuarioLogado(null);
-    setScreen('inicio');
-  };
 
   const handleNewData = (type, newData) => {
     setData(prevData => {
@@ -158,6 +158,13 @@ function App() {
            ...prevData,
            Duvidas: [newData, ...prevData.Duvidas]
          };
+      } else if (type === 'DuvidaAtualizada') {
+         return {
+           ...prevData,
+           Duvidas: prevData.Duvidas.map(d =>
+             (d._id || d.id) === (newData._id || newData.id) ? newData : d
+           )
+         };
       }
       return prevData;
     });
@@ -168,20 +175,22 @@ function App() {
   return (
     <>
       <Header screen={screen} setScreen={setScreen} Usuario={Usuario} />
-      {screen === 'inicio' && <Inicio 
-        Usuario={Usuario} 
-        Materias={Materias} 
-        Provas={Provas} 
-        Mensagens={Mensagens}
-        MateriaisEstudo={MateriaisEstudo}
-        setScreen={setScreen}
-      />}
-      {screen === 'horarios' && <Horarios Materias={Materias} />}
-      {screen === 'duvidas' && <Duvidas Usuario={Usuario} Materias={Materias} ListaDuvidas={ListaDuvidas} apiUrl={API_BASE_URL} onNewData={handleNewData}/>}
-      {screen === 'materiais' && <Materiais Materias={Materias} MateriaisEstudoIniciais={MateriaisEstudo} Usuario={Usuario} apiUrl={API_BASE_URL} onNewData={handleNewData}/>}
-      {screen === 'chat' && <Chat Materias={Materias} Mensagens={Mensagens} Usuario={Usuario} apiUrl={API_BASE_URL} onNewData={handleNewData} />}
-      {screen === 'cadastro' && <Cadastro apiUrl={API_BASE_URL} />}
-      {screen === 'perfil' && <Perfil Usuario={Usuario} Materias={Materias} onLogout={handleLogout} />}
+      <Suspense fallback={<div className="loading-screen" style={{ padding: '20px', textAlign: 'center' }}><p>Carregando...</p></div>}>
+        {screen === 'inicio' && <Inicio
+          Usuario={Usuario}
+          Materias={Materias}
+          Provas={Provas}
+          Mensagens={Mensagens}
+          MateriaisEstudo={MateriaisEstudo}
+          setScreen={setScreen}
+        />}
+        {screen === 'horarios' && <Horarios Materias={Materias} />}
+        {screen === 'duvidas' && <Duvidas Usuario={Usuario} Materias={Materias} ListaDuvidas={ListaDuvidas} onNewData={handleNewData}/>}
+        {screen === 'materiais' && <Materiais Materias={Materias} MateriaisEstudoIniciais={MateriaisEstudo} Usuario={Usuario} onNewData={handleNewData}/>}
+        {screen === 'chat' && <Chat Materias={Materias} Mensagens={Mensagens} Usuario={Usuario} onNewData={handleNewData} />}
+        {screen === 'cadastro' && <Cadastro />}
+        {screen === 'perfil' && <Perfil Usuario={Usuario} Materias={Materias} onLogout={handleLogout} />}
+      </Suspense>
       <TabBar screen={screen} setScreen={setScreen} />
     </>
   )

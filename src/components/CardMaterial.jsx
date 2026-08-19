@@ -1,4 +1,3 @@
-import React from 'react';
 import './CardMaterial.css';
 
 export default function CardMaterial({ material, NomeMateria }) {

@@ -1,15 +1,21 @@
-.barra-dias{
+.barra-dias {
     display: flex; 
     justify-content: space-between;
     align-items: center;
     margin: 20px 20px;
-    cursor: pointer;
     max-width: 500px;
     margin-left: auto;
     margin-right: auto;
-    p{
-        font-size: 16px;
-    }
+}
+
+.btn-dia {
+    font-size: 16px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    color: inherit;
+    transition: color 0.2s, font-weight 0.2s;
 }
 
 .active{

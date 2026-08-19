@@ -71,8 +71,8 @@ export default function Inicio({
                             <h3>Monitorias Hoje ({hojeStr})</h3>
                             {monitoriasHoje.length > 0 ? (
                                 <ul className="monitorias-lista">
-                                    {monitoriasHoje.map((mon, idx) => (
-                                        <li key={idx}><strong>{mon.materia}</strong>: {mon.horario}</li>
+                                    {monitoriasHoje.map((mon) => (
+                                        <li key={`${mon.materia}-${mon.horario}-${mon.sala}`}><strong>{mon.materia}</strong>: {mon.horario}</li>
                                     ))}
                                 </ul>
                             ) : (

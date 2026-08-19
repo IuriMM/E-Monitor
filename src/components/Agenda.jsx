@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import './Agenda.css';
 
 export default function Agenda({ provas = [], materias = {} }) {
