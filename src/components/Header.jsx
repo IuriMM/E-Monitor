@@ -1,8 +1,9 @@
 import './Header.css'
 import { Settings } from 'lucide-react'
+import { isAdminUser } from '../utils/admin'
 
 export default function Header({ screen, setScreen, Usuario }) {
-    const isDev = import.meta.env.DEV;
+    const isAdmin = isAdminUser(Usuario);
 
     return (
         <header className="main-header">
@@ -14,11 +15,11 @@ export default function Header({ screen, setScreen, Usuario }) {
             {screen === 'cadastro' && <h1>Cadastros</h1>}
             {screen === 'perfil' && <h1>Perfil</h1>}
             <div className="header-actions">
-                {isDev && (
-                    <button 
-                        className="admin-btn" 
+                {isAdmin && (
+                    <button
+                        className="admin-btn"
                         onClick={() => setScreen('cadastro')}
-                        title="Painel de Cadastros (Dev Only)"
+                        title="Painel de Cadastros (Admin)"
                     >
                         <Settings size={22} color="white" />
                     </button>

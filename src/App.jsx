@@ -5,6 +5,7 @@ import TabBar from './components/TabBar'
 import Header from './components/Header'
 import Login from './pages/Login'
 import { apiGet, setAuthToken, clearAuthToken, setUnauthorizedHandler } from './api/client'
+import { isAdminUser } from './utils/admin'
 
 const Inicio = lazy(() => import('./pages/Inicio'))
 const Horarios = lazy(() => import('./pages/Horarios'))
@@ -206,7 +207,7 @@ function App() {
         {screen === 'duvidas' && <Duvidas Usuario={Usuario} Materias={Materias} ListaDuvidas={ListaDuvidas} TodosUsuarios={TodosUsuarios} onNewData={handleNewData}/>}
         {screen === 'materiais' && <Materiais Materias={Materias} MateriaisEstudoIniciais={MateriaisEstudo} Usuario={Usuario} onNewData={handleNewData}/>}
         {screen === 'chat' && <Chat Materias={Materias} Mensagens={Mensagens} Usuario={Usuario} TodosUsuarios={TodosUsuarios} onNewData={handleNewData} />}
-        {screen === 'cadastro' && <Cadastro />}
+        {screen === 'cadastro' && isAdminUser(Usuario) && <Cadastro />}
         {screen === 'perfil' && <Perfil Usuario={Usuario} Materias={Materias} onLogout={handleLogout} />}
       </Suspense>
       <TabBar screen={screen} setScreen={setScreen} />

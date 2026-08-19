@@ -40,7 +40,7 @@ export default function ChatWindow({ monitor, mensagensIniciais, usuarioAtual, o
             setMensagens([...mensagens, createdMsg]);
             if (onNewData) onNewData('Mensagem', createdMsg);
         } catch (err) {
-            alert('Falha ao enviar mensagem. Tente novamente.');
+            alert(`Falha ao enviar mensagem: ${err.message}`);
             setNovaMensagem(msgTexto); // restore text on failure
         } finally {
             setIsSending(false);
