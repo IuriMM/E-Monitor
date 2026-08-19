@@ -23,15 +23,29 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 8px;
-    border-radius: 12px;
-    transition: background-color 0.2s;
+    padding: 10px 20px;
+    border-radius: var(--radius-full);
+    transition: all 0.3s ease;
+    opacity: 0.6;
+}
+
+.tab-btn img {
+    transition: transform 0.2s ease;
 }
 
 .tab-btn:hover {
-    background-color: rgba(0,0,0,0.05);
+    opacity: 0.8;
 }
 
-.ativo img {
-    filter: brightness(0) saturate(100%) invert(50%) sepia(87%) saturate(1476%) hue-rotate(193deg) brightness(101%) contrast(96%);
+.tab-btn.ativo {
+    background-color: var(--primary-light);
+    opacity: 1;
+}
+
+.tab-btn.ativo img {
+    transform: scale(1.15);
+    /* We still need a filter to make the SVG primary color, but simpler if possible. 
+       Or since we can't easily change SVG fill without inline SVG, we can use a simpler filter 
+       or just keep the hue shift if it matched primary. Let's use a nice CSS filter to make it primary: */
+    filter: brightness(0) saturate(100%) invert(29%) sepia(85%) saturate(2293%) hue-rotate(228deg) brightness(98%) contrast(93%); /* approx #4f46e5 */
 }

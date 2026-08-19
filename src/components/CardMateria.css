@@ -1,31 +1,66 @@
-.card-container {
-    margin: 15px;
-    display: flex;
-    flex-direction: column;
-    background-color: #ffffff;
-    border-radius: 20px;
-    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
+.card-materia {
+    background-color: var(--surface-card);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
     overflow: hidden;
     animation: fadeSlideUp 0.3s ease-out forwards;
     width: 100%;
-    max-width: 450px;
-    margin: 0 auto;
-    h2{
-        font-weight: 600;
-        font-size: 18px;
-        margin: 16px 14px 20px;
-    }
-    p{
-        font-size: 16px;
-        margin: 16px 14px 20px;
-    }
-    .bottom{
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        width: 100%;
-        background-color: #C4D238;
-    }
+    border-left: 4px solid var(--primary);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card-materia:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.card-materia-content {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.materia-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.materia-header h2 {
+    font-weight: 600;
+    font-size: 16px;
+    color: var(--text-main);
+    margin: 0;
+    flex: 1;
+}
+
+.horario-badge {
+    background-color: var(--primary-light);
+    color: var(--primary);
+    padding: 4px 8px;
+    border-radius: var(--radius-md);
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+    margin-left: 12px;
+}
+
+.monitor-name {
+    font-size: 14px;
+    color: var(--text-muted);
+    margin: 0;
+}
+
+.sala-info {
+    margin-top: 4px;
+}
+
+.sala-info p {
+    font-size: 14px;
+    color: var(--text-main);
+    font-weight: 500;
+    margin: 0;
 }
 
 

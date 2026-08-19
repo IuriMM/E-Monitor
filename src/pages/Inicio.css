@@ -12,9 +12,10 @@
 }
 
 .section-title {
-  font-size: 24px;
-  margin-bottom: 20px;
-  color: var(--text-color, #333);
+  font-size: 26px;
+  font-weight: 700;
+  margin-bottom: 24px;
+  color: var(--text-main);
 }
 
 .notifications-grid {
@@ -78,26 +79,80 @@
 }
 
 .notification-content h3 {
-  margin: 0 0 8px 0;
-  font-size: 18px;
-  color: var(--text-color, #222);
+  margin: 0 0 4px 0;
+  font-size: 16px;
+  color: var(--text-main, #222);
+  font-weight: 600;
 }
 
 .notification-content p {
   margin: 0;
-  font-size: 14px;
-  color: #666;
+  font-size: 13px;
+  color: var(--text-muted, #666);
 }
 
-.monitorias-lista {
+.dashboard-section {
+  background-color: var(--surface-card);
+  padding: 24px;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  margin-bottom: 24px;
+}
+
+.dashboard-header h3 {
+  font-size: 18px;
+  color: var(--primary);
+  margin-bottom: 16px;
+  font-weight: 600;
+}
+
+.monitorias-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.timeline-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+.timeline-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.timeline-time {
+  font-weight: 600;
+  color: var(--primary);
+  font-size: 15px;
+  background: var(--primary-light);
+  padding: 6px 12px;
+  border-radius: var(--radius-md);
+}
+
+.timeline-content h4 {
+  margin: 0 0 4px 0;
+  font-size: 15px;
+  color: var(--text-main);
+}
+
+.timeline-content p {
   margin: 0;
-  padding-left: 16px;
-  font-size: 14px;
-  color: #666;
+  font-size: 13px;
+  color: var(--text-muted);
 }
 
-.monitorias-lista li {
-  margin-bottom: 4px;
+.empty-card {
+  padding: 20px;
+  background-color: #f1f5f9;
+  border-radius: var(--radius-md);
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 14px;
 }
 
 @media (min-width: 900px) {
