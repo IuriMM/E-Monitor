@@ -5,8 +5,9 @@ import { apiPost } from '../api/client';
 import { User, Lock, Loader2 } from 'lucide-react';
 
 export default function Login({ onLogin, sessionExpired }) {
-  const [matricula, setMatricula] = useState('2024100');
-  const [senha, setSenha] = useState('Demo@123');
+  // SECURE: Credentials should never be hardcoded in the source. Use empty strings for defaults.
+  const [matricula, setMatricula] = useState('');
+  const [senha, setSenha] = useState('');
   const [erro, setErro] = useState('');
   const [loading, setLoading] = useState(false);
 
