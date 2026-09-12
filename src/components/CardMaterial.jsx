@@ -1,5 +1,6 @@
 import './CardMaterial.css';
 import { Download } from 'lucide-react';
+import { isSafeUrl } from '../utils/security';
 
 export default function CardMaterial({ material, NomeMateria }) {
     return (
@@ -17,7 +18,7 @@ export default function CardMaterial({ material, NomeMateria }) {
             </div>
             
             <div className="material-footer">
-                <a href={material.link} target="_blank" rel="noopener noreferrer" className="btn-download">
+                <a href={isSafeUrl(material.link)} target="_blank" rel="noopener noreferrer" className="btn-download">
                     <Download size={18} />
                     Baixar Material
                 </a>

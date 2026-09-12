@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import './Cadastro.css';
 import { apiGet, apiPost, apiPut, apiDelete } from '../api/client';
+import { isSafeUrl } from '../utils/security';
 
 const DIAS_SEMANA = ['SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SAB', 'DOM'];
 
@@ -552,7 +553,7 @@ const MATERIAL_COLUMNS = [
     key: 'link',
     label: 'Link',
     render: (m) => m.link
-      ? <a href={m.link} target="_blank" rel="noopener noreferrer">Abrir</a>
+      ? <a href={isSafeUrl(m.link)} target="_blank" rel="noopener noreferrer">Abrir</a>
       : '-',
   },
 ];
