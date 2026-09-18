@@ -551,8 +551,9 @@ const MATERIAL_COLUMNS = [
   {
     key: 'link',
     label: 'Link',
+    // 🛡️ Security: Previne XSS (Cross-Site Scripting) na renderização de links criados por usuários
     render: (m) => m.link
-      ? <a href={m.link} target="_blank" rel="noopener noreferrer">Abrir</a>
+      ? <a href={/^\s*javascript:/i.test(m.link) ? '#' : m.link} target="_blank" rel="noopener noreferrer">Abrir</a>
       : '-',
   },
 ];
