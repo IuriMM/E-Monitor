@@ -17,7 +17,8 @@ export default function CardMaterial({ material, NomeMateria }) {
             </div>
             
             <div className="material-footer">
-                <a href={material.link} target="_blank" rel="noopener noreferrer" className="btn-download">
+                {/* 🛡️ Security: Previne XSS (Cross-Site Scripting) ignorando links maliciosos que usam o protocolo javascript: */}
+                <a href={/^\s*javascript:/i.test(material.link) ? '#' : material.link} target="_blank" rel="noopener noreferrer" className="btn-download">
                     <Download size={18} />
                     Baixar Material
                 </a>
