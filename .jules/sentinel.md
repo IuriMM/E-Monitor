@@ -1,0 +1,4 @@
+## 2024-05-15 - Hardcoded Default Credentials in Login Component
+**Vulnerability:** Default demo credentials ('2024100' and 'Demo@123') were hardcoded as the initial state in the `Login.jsx` React component.
+**Learning:** Developers likely used these values to speed up local testing but forgot to remove them before committing. Since the React app compiles into static assets, these credentials are exposed in plain text to anyone who loads the site, potentially leading to unauthorized access.
+**Prevention:** Never hardcode valid credentials into frontend source code. Always initialize credential state variables as empty strings. Utilize environment variables (e.g., `import.meta.env`) for configuring API endpoints or public keys, but keep passwords and API secrets strictly out of the frontend.
